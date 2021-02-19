@@ -41,11 +41,11 @@ namespace RML.NativeLib {
             if (args[0].tp.Equals(Rtype.Block)) {
                 new Rsolver(args[0].GetList()).Eval(ctx);
                 long end = DateTime.Now.ToUniversalTime().Ticks;
-                return new Rtoken(Rtype.Int, Convert.ToInt32(end - start));
+                return new Rtoken(Rtype.Float, Convert.ToDouble(end - start) / 10000000);
             } else if(args[0].tp.Equals(Rtype.Str)) {
                 new Rsolver(args[0].GetStr()).Eval(ctx);
                 long end = DateTime.Now.ToUniversalTime().Ticks;
-                return new Rtoken(Rtype.Int, Convert.ToInt32(end - start));
+                return new Rtoken(Rtype.Float, Convert.ToDouble(end - start) / 10000000);
             } else {
                 return new Rtoken(Rtype.Err, "Error: Types mismatch for native::cost");
             }

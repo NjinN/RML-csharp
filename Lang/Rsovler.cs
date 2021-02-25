@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace RML.Lang {
-    class Rsolver {
+    struct Rsolver {
         public enum Model { STR, BLK};
 
         public List<string> inpStrs;
@@ -14,7 +14,7 @@ namespace RML.Lang {
         public Rtoken ansTk;
         public List<Rtoken> reduceBlk;
 
-        public Rsolver() { }
+        //public Rsolver() { }
 
         public Rsolver(List<string> strs) {
             inpStrs = strs;
@@ -70,7 +70,21 @@ namespace RML.Lang {
         public Rtoken Eval(Rtable ctx) {
             
             while(idx < inpLen) {
-                ansTk = EvalOne(ctx);
+                EvalOne(ctx);
+                if(ansTk.tp.Equals(Rtype.Flow)) {
+                    if (ansTk.GetFlow().name.Equals("opAns")) {
+                        if (reduceBlk.Count > 0) {
+                            reduceBlk.RemoveAt(reduceBlk.Count - 1);
+                        }
+                        ansTk = ansTk.GetFlow().val;
+                    }else if (ansTk.GetFlow().name.Equals("pass")) { 
+                    
+                    } else {
+                        return ansTk;
+                    }
+                    
+                } 
+
                 reduceBlk.Add(ansTk);
             }
 
@@ -100,6 +114,7 @@ namespace RML.Lang {
                     }
                     Rtoken v = EvalOne(ctx);
                     ctx.Put(currTk.GetStr(), v);
+                    ansTk = v;
                     return v;
 
                 case Rtype.Func:
@@ -109,34 +124,35 @@ namespace RML.Lang {
                     if(fArgs.Count < f.argsLen) {
                         return new Rtoken(Rtype.Err, "Error: Incomplete expression!!!");
                     }
-                    return f.Run(fArgs, ctx);
+                    ansTk = f.Run(fArgs, ctx);
+                    return ansTk;
 
                 case Rtype.Native:
                     Rnative nv = currTk.GetNative();
                     List<Rtoken> nArgs = new List<Rtoken>();
                     EvalN(nArgs, ctx, nv.argsLen);
                     if(nArgs.Count < nv.argsLen) {
-                        return new Rtoken(Rtype.Err, "Error: Incomplete expression!!!");
+                        ansTk = new Rtoken(Rtype.Err, "Error: Incomplete expression!!!");
+                        return ansTk;
                     }
-                    return nv.Run(nArgs, ctx);
+                    ansTk = nv.Run(nArgs, ctx);
+                    return ansTk;
 
                 case Rtype.Op:
-                    if(reduceBlk.Count == 0) {
-                        return new Rtoken(Rtype.Err, "Error: Incomplete expression!!!");
-                    }
-                    reduceBlk.RemoveAt(reduceBlk.Count - 1);
-
                     Rnative op = currTk.GetNative();
                     List<Rtoken> oArgs = new List<Rtoken>();
                     oArgs.Add(ansTk);
                     EvalN(oArgs, ctx, op.argsLen);
                     if(oArgs.Count < op.argsLen) {
-                        return new Rtoken(Rtype.Err, "Error: Incomplete expression!!!");
+                        ansTk = new Rtoken(Rtype.Err, "Error: Incomplete expression!!!");
+                        return ansTk;
                     }
-                    return op.Run(oArgs, ctx);
+                    ansTk = new Rtoken(Rtype.Flow, new Rflow("opAns", op.Run(oArgs, ctx)));
+                    return ansTk;
 
                 default:
-                    return currTk;
+                    ansTk = currTk;
+                    return ansTk;
             }
 
 
@@ -145,7 +161,15 @@ namespace RML.Lang {
         
         public void EvalN(List<Rtoken> args, Rtable ctx, int n) {
             while(args.Count < n && idx < inpLen) {
-                args.Add(EvalOne(ctx));
+                EvalOne(ctx);
+                if (ansTk.tp.Equals(Rtype.Flow) && ansTk.GetFlow().name.Equals("opAns")) {
+                    if (args.Count > 0) {
+                        args.RemoveAt(args.Count - 1);
+                    }
+                    ansTk = ansTk.GetFlow().val;
+                }
+
+                args.Add(ansTk);
             }
         }
 

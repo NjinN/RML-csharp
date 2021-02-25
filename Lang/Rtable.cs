@@ -34,10 +34,20 @@ namespace RML.Lang {
         }
 
         public void PutNow(string k, Rtoken v) {
-            if (table.ContainsKey(k)) {
-                table.Remove(k);
+            if(Renv.threads > 1) {
+                lock (this) {
+                    if (table.ContainsKey(k)) {
+                        table.Remove(k);
+                    }
+                    table.Add(k, v);
+                }
+
+            } else {
+                if (table.ContainsKey(k)) {
+                    table.Remove(k);
+                }
+                table.Add(k, v);
             }
-            table.Add(k, v);
         }
 
         public Rtoken GetNow(string k) {

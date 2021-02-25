@@ -5,7 +5,7 @@ using System.Text;
 namespace RML.Lang {
     class Rtoken {
         public Rtype    tp;
-        public dynamic  val;
+        public Object  val;
 
         public Rtoken() {
             tp = Rtype.Nil;
@@ -74,7 +74,7 @@ namespace RML.Lang {
                 case Rtype.Err:
                     return GetStr();
                 case Rtype.Bool:
-                    return GetBool().ToString();
+                    return GetBool().ToString().ToLower();
                 case Rtype.Byte:
                     return GetByte().ToString();
                 case Rtype.Char:

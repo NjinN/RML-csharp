@@ -80,7 +80,7 @@ namespace RML.NativeLib {
     class Relse : Rnative {
         public Relse() {
             name = "else";
-            argsLen = 3;
+            argsLen = 2;
         }
 
         public override Rtoken Run(List<Rtoken> args, Rtable ctx) {

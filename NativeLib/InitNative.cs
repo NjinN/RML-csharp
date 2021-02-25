@@ -27,6 +27,11 @@ namespace RML.NativeLib {
 
             ctx.PutNow("func", new Rtoken(Rtype.Native, new Func()));
 
+            ctx.PutNow("break", new Rtoken(Rtype.Native, new Rbreak()));
+            ctx.PutNow("continue", new Rtoken(Rtype.Native, new Rcontinue()));
+            ctx.PutNow("loop", new Rtoken(Rtype.Native, new Rloop()));
+            ctx.PutNow("repeat", new Rtoken(Rtype.Native, new Repeat()));
+
         }
 
 

@@ -136,6 +136,10 @@ namespace RML.Lang {
                 return -1;
             }
 
+            if (s.StartsWith('-')) {
+                idx = 1;
+            }
+
             while(idx < cs.Length) {
                 if (cs[idx].Equals('.')) {
                     dot++;

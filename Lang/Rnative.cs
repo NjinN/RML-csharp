@@ -12,5 +12,15 @@ namespace RML.Lang {
 
         public abstract Rtoken Run(List<Rtoken> args, Rtable ctx);
     
+        public Rtoken ErrorInfo(List<Rtoken> args) {
+            string typeStr = "";
+            foreach(Rtoken item in args) {
+                typeStr += RtokenKit.Rtype2Str(item.tp) + '-';
+            }
+            
+            typeStr = typeStr.TrimEnd('-');
+            
+            return new Rtoken(Rtype.Err, "Error: Types of " + typeStr + " mismatch for native::" + name);
+        }
     }
 }

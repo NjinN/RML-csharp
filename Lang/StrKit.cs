@@ -4,22 +4,22 @@ using System.Text;
 
 namespace RML.Lang {
     class StrKit {
-        public unsafe static List<string> CutStrs(string s) {
+        public static List<string> CutStrs(string s) {
             List<string> result = new List<string>();
             int idx = 0;
             char[] cs = s.ToCharArray();
             while (idx < s.Length) {
                 if (!char.IsWhiteSpace(cs[idx])) {
                     if (cs[idx].Equals('"')) {
-                        result.Add(TakeStr(cs, &idx));
+                        result.Add(TakeStr(cs, ref idx));
                     }else if(cs[idx].Equals('[')) {
-                        result.Add(TakeBlock(cs, &idx));
+                        result.Add(TakeBlock(cs, ref idx));
                     }else if (cs[idx].Equals('(')) {
-                        result.Add(TakeParen(cs, &idx));
+                        result.Add(TakeParen(cs, ref idx));
                     }else if (cs[idx].Equals('{')) {
-                        result.Add(TakeObject(cs, &idx));
+                        result.Add(TakeObject(cs, ref idx));
                     } else {
-                        result.Add(TakeWord(cs, &idx));
+                        result.Add(TakeWord(cs, ref idx));
                     }
                 }
 
@@ -29,97 +29,97 @@ namespace RML.Lang {
             return result;
         }
 
-        public unsafe static string TakeWord(char[] cs, int* idx) {
-            int start = *idx;
-            while (*idx < cs.Length) {
-                if (char.IsWhiteSpace(cs[*idx])) {
+        public static string TakeWord(char[] cs, ref int idx) {
+            int start = idx;
+            while (idx < cs.Length) {
+                if (char.IsWhiteSpace(cs[idx])) {
                     break;
                 }
 
-                (*idx)++;
+                idx++;
             }
-            return new string(cs[start..(*idx)]);
+            return new string(cs[start..idx]);
         }
 
-        public unsafe static string TakeStr(char[] cs, int* idx) {
-            int start = *idx;
-            (*idx)++;
-            while (*idx < cs.Length) {
-                if (cs[*idx].Equals('^')) {
-                    (*idx)++;
-                } else if (cs[*idx].Equals('"')) {
-                    (*idx)++;
+        public static string TakeStr(char[] cs, ref int idx) {
+            int start = idx;
+            idx++;
+            while (idx < cs.Length) {
+                if (cs[idx].Equals('^')) {
+                    idx++;
+                } else if (cs[idx].Equals('"')) {
+                    idx++;
                     break;
                 }
-                (*idx)++;
+                idx++;
             }
-            return new string(cs[start..(*idx)]);
+            return new string(cs[start..idx]);
         }
 
-        public unsafe static string TakeBlock(char[] cs, int* idx) {
-            int start = *idx;
+        public static string TakeBlock(char[] cs, ref int idx) {
+            int start = idx;
             int floor = 0;
-            while (*idx < cs.Length) {
-                if (cs[*idx].Equals('"')) {
-                    TakeStr(cs, idx);
-                } else if (cs[*idx].Equals('[')) {
+            while (idx < cs.Length) {
+                if (cs[idx].Equals('"')) {
+                    TakeStr(cs, ref idx);
+                } else if (cs[idx].Equals('[')) {
                     floor++;
-                } else if (cs[*idx].Equals(']')) {
+                } else if (cs[idx].Equals(']')) {
                     floor--;
                 }
 
-                (*idx)++;
+                idx++;
                 if (floor == 0) {
                     break;
                 }
 
             }
-            return new string(cs[start..(*idx)]);
+            return new string(cs[start..idx]);
 
         }
 
-        public unsafe static string TakeParen(char[] cs, int* idx) {
-            int start = *idx;
+        public static string TakeParen(char[] cs, ref int idx) {
+            int start = idx;
             int floor = 0;
-            while (*idx < cs.Length) {
-                if (cs[*idx].Equals('"')) {
-                    TakeStr(cs, idx);
-                } else if (cs[*idx].Equals('(')) {
+            while (idx < cs.Length) {
+                if (cs[idx].Equals('"')) {
+                    TakeStr(cs, ref idx);
+                } else if (cs[idx].Equals('(')) {
                     floor++;
-                } else if (cs[*idx].Equals(')')) {
+                } else if (cs[idx].Equals(')')) {
                     floor--;
                 }
 
-                (*idx)++;
+                idx++;
                 if (floor == 0) {
                     break;
                 }
 
             }
-            return new string(cs[start..(*idx)]);
+            return new string(cs[start..idx]);
 
         }
 
 
-        public unsafe static string TakeObject(char[] cs, int* idx) {
-            int start = *idx;
+        public static string TakeObject(char[] cs, ref int idx) {
+            int start = idx;
             int floor = 0;
-            while (*idx < cs.Length) {
-                if (cs[*idx].Equals('"')) {
-                    TakeStr(cs, idx);
-                } else if (cs[*idx].Equals('{')) {
+            while (idx < cs.Length) {
+                if (cs[idx].Equals('"')) {
+                    TakeStr(cs, ref idx);
+                } else if (cs[idx].Equals('{')) {
                     floor++;
-                } else if (cs[*idx].Equals('}')) {
+                } else if (cs[idx].Equals('}')) {
                     floor--;
                 }
 
-                (*idx)++;
+                idx++;
                 if (floor == 0) {
                     break;
                 }
 
             }
-            return new string(cs[start..(*idx)]);
+            return new string(cs[start..idx]);
 
         }
 

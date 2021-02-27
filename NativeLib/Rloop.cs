@@ -56,7 +56,7 @@ namespace RML.NativeLib {
                         idx++;
                     }
 
-                    return new Rtoken();
+                    return new Rtoken(Rtype.None, 0);
 
                 }else if (args[1].tp.Equals(Rtype.Str)) {
                     int idx = 0;
@@ -76,13 +76,13 @@ namespace RML.NativeLib {
                         idx++;
                     }
 
-                    return new Rtoken();
+                    return new Rtoken(Rtype.None, 0);
                 }
 
             }
 
 
-            return new Rtoken(Rtype.Err, "Error: Types mismatch for native::loop");
+            return ErrorInfo(args);
         }
     }
 
@@ -124,7 +124,7 @@ namespace RML.NativeLib {
                         
                     }
 
-                    return new Rtoken();
+                    return new Rtoken(Rtype.None, 0);
 
                 } else if (args[2].tp.Equals(Rtype.Str)) {
                     Rtoken cond = rCtx.GetNow(args[0].GetWord().key);
@@ -148,13 +148,13 @@ namespace RML.NativeLib {
 
                     }
 
-                    return new Rtoken();
+                    return new Rtoken(Rtype.None, 0);
                 }
 
             }
 
 
-            return new Rtoken(Rtype.Err, "Error: Types mismatch for native::loop");
+            return ErrorInfo(args);
         }
     }
 

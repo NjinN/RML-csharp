@@ -35,8 +35,8 @@ namespace RML.Lang {
             return (int)val;
         }
 
-        public double GetFloat() {
-            return (double)val;
+        public decimal GetFloat() {
+            return (decimal)val;
         }
 
         public string GetStr() {
@@ -164,6 +164,27 @@ namespace RML.Lang {
 
                 default:
                     return this;
+            }
+        }
+
+
+        public Rtoken Clone() {
+            return new Rtoken(tp, val);
+        }
+
+
+        public Rtoken Copy() {
+            switch (tp) {
+                case Rtype.Block:
+                case Rtype.Paren:
+                    List<Rtoken> list = new List<Rtoken>();
+                    foreach(Rtoken item in GetList()) {
+                        list.Add(item.Clone());
+                    }
+                    return new Rtoken(tp, list);
+
+                default:
+                    return Clone();
             }
         }
 

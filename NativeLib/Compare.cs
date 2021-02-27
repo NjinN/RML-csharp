@@ -29,7 +29,7 @@ namespace RML.NativeLib {
                 }
             }
 
-            return new Rtoken(Rtype.Err, "Error: Types mismatch for native::eq");
+            return ErrorInfo(args);
         }
 
         public Rtoken EqIntInt(List<Rtoken> args) {
@@ -40,19 +40,19 @@ namespace RML.NativeLib {
 
         public Rtoken EqIntFloat(List<Rtoken> args) {
             int argl = args[0].GetInt();
-            double argr = args[1].GetFloat();
-            return new Rtoken(Rtype.Bool, (double)argl == argr);
+            decimal argr = args[1].GetFloat();
+            return new Rtoken(Rtype.Bool, (decimal)argl == argr);
         }
 
         public Rtoken EqFloatInt(List<Rtoken> args) {
-            double argl = args[0].GetFloat();
+            decimal argl = args[0].GetFloat();
             int argr = args[1].GetInt();
-            return new Rtoken(Rtype.Bool, argl == (double)argr);
+            return new Rtoken(Rtype.Bool, argl == (decimal)argr);
         }
 
         public Rtoken EqFloatFloat(List<Rtoken> args) {
-            double argl = args[0].GetFloat();
-            double argr = args[1].GetFloat();
+            decimal argl = args[0].GetFloat();
+            decimal argr = args[1].GetFloat();
             return new Rtoken(Rtype.Bool, argl == argr);
         }
 
@@ -87,7 +87,7 @@ namespace RML.NativeLib {
                 }
             }
 
-            return new Rtoken(Rtype.Err, "Error: Types mismatch for native::lt");
+            return ErrorInfo(args);
         }
 
         public Rtoken LtIntInt(List<Rtoken> args) {
@@ -98,19 +98,19 @@ namespace RML.NativeLib {
 
         public Rtoken LtIntFloat(List<Rtoken> args) {
             int argl = args[0].GetInt();
-            double argr = args[1].GetFloat();
-            return new Rtoken(Rtype.Bool, (double)argl < argr);
+            decimal argr = args[1].GetFloat();
+            return new Rtoken(Rtype.Bool, (decimal)argl < argr);
         }
 
         public Rtoken LtFloatInt(List<Rtoken> args) {
-            double argl = args[0].GetFloat();
+            decimal argl = args[0].GetFloat();
             int argr = args[1].GetInt();
-            return new Rtoken(Rtype.Bool, argl < (double)argr);
+            return new Rtoken(Rtype.Bool, argl < (decimal)argr);
         }
 
         public Rtoken LtFloatFloat(List<Rtoken> args) {
-            double argl = args[0].GetFloat();
-            double argr = args[1].GetFloat();
+            decimal argl = args[0].GetFloat();
+            decimal argr = args[1].GetFloat();
             return new Rtoken(Rtype.Bool, argl < argr);
         }
 
@@ -143,7 +143,7 @@ namespace RML.NativeLib {
                 }
             }
 
-            return new Rtoken(Rtype.Err, "Error: Types mismatch for native::gt");
+            return ErrorInfo(args);
         }
 
         public Rtoken GtIntInt(List<Rtoken> args) {
@@ -154,19 +154,19 @@ namespace RML.NativeLib {
 
         public Rtoken GtIntFloat(List<Rtoken> args) {
             int argl = args[0].GetInt();
-            double argr = args[1].GetFloat();
-            return new Rtoken(Rtype.Bool, (double)argl > argr);
+            decimal argr = args[1].GetFloat();
+            return new Rtoken(Rtype.Bool, (decimal)argl > argr);
         }
 
         public Rtoken GtFloatInt(List<Rtoken> args) {
-            double argl = args[0].GetFloat();
+            decimal argl = args[0].GetFloat();
             int argr = args[1].GetInt();
-            return new Rtoken(Rtype.Bool, argl > (double)argr);
+            return new Rtoken(Rtype.Bool, argl > (decimal)argr);
         }
 
         public Rtoken GtFloatFloat(List<Rtoken> args) {
-            double argl = args[0].GetFloat();
-            double argr = args[1].GetFloat();
+            decimal argl = args[0].GetFloat();
+            decimal argr = args[1].GetFloat();
             return new Rtoken(Rtype.Bool, argl > argr);
         }
 
@@ -201,7 +201,7 @@ namespace RML.NativeLib {
                 }
             }
 
-            return new Rtoken(Rtype.Err, "Error: Types mismatch for native::le");
+            return ErrorInfo(args);
         }
 
         public Rtoken LeIntInt(List<Rtoken> args) {
@@ -212,19 +212,19 @@ namespace RML.NativeLib {
 
         public Rtoken LeIntFloat(List<Rtoken> args) {
             int argl = args[0].GetInt();
-            double argr = args[1].GetFloat();
-            return new Rtoken(Rtype.Bool, (double)argl < argr);
+            decimal argr = args[1].GetFloat();
+            return new Rtoken(Rtype.Bool, (decimal)argl < argr);
         }
 
         public Rtoken LeFloatInt(List<Rtoken> args) {
-            double argl = args[0].GetFloat();
+            decimal argl = args[0].GetFloat();
             int argr = args[1].GetInt();
-            return new Rtoken(Rtype.Bool, argl < (double)argr);
+            return new Rtoken(Rtype.Bool, argl < (decimal)argr);
         }
 
         public Rtoken LeFloatFloat(List<Rtoken> args) {
-            double argl = args[0].GetFloat();
-            double argr = args[1].GetFloat();
+            decimal argl = args[0].GetFloat();
+            decimal argr = args[1].GetFloat();
             return new Rtoken(Rtype.Bool, argl < argr);
         }
 
@@ -259,7 +259,7 @@ namespace RML.NativeLib {
                 }
             }
 
-            return new Rtoken(Rtype.Err, "Error: Types mismatch for native::ge");
+            return ErrorInfo(args);
         }
 
         public Rtoken GeIntInt(List<Rtoken> args) {
@@ -270,19 +270,19 @@ namespace RML.NativeLib {
 
         public Rtoken GeIntFloat(List<Rtoken> args) {
             int argl = args[0].GetInt();
-            double argr = args[1].GetFloat();
-            return new Rtoken(Rtype.Bool, (double)argl > argr);
+            decimal argr = args[1].GetFloat();
+            return new Rtoken(Rtype.Bool, (decimal)argl > argr);
         }
 
         public Rtoken GeFloatInt(List<Rtoken> args) {
-            double argl = args[0].GetFloat();
+            decimal argl = args[0].GetFloat();
             int argr = args[1].GetInt();
-            return new Rtoken(Rtype.Bool, argl > (double)argr);
+            return new Rtoken(Rtype.Bool, argl > (decimal)argr);
         }
 
         public Rtoken GeFloatFloat(List<Rtoken> args) {
-            double argl = args[0].GetFloat();
-            double argr = args[1].GetFloat();
+            decimal argl = args[0].GetFloat();
+            decimal argr = args[1].GetFloat();
             return new Rtoken(Rtype.Bool, argl > argr);
         }
 

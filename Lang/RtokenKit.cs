@@ -38,7 +38,7 @@ namespace RML.Lang {
             }
 
             if (StrKit.IsNumberStr(str) == 1) {
-                return new Rtoken(Rtype.Float, Convert.ToDouble(str));
+                return new Rtoken(Rtype.Float, Convert.ToDecimal(str));
             }
 
             if (str.StartsWith('"')) {

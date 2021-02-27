@@ -24,7 +24,20 @@ namespace RML.NativeLib {
 
             }
 
-            return new Rtoken(Rtype.Err, "Error: Types mismatch for native::func");
+            return ErrorInfo(args);
+        }
+    }
+
+
+
+    class Rreturn : Rnative {
+        public Rreturn() {
+            name = "return";
+            argsLen = 1;
+        }
+
+        public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
+            return new Rtoken(Rtype.Flow, new Rflow("return", args[0]));
         }
     }
 }

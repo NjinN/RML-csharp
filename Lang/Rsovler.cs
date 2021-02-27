@@ -12,7 +12,6 @@ namespace RML.Lang {
         public int idx;
         public Model model;
         public Rtoken ansTk;
-        public List<Rtoken> reduceBlk;
 
         //public Rsolver() { }
 
@@ -23,7 +22,6 @@ namespace RML.Lang {
             idx = 0;
             model = Model.STR;
             ansTk = new Rtoken();
-            reduceBlk = new List<Rtoken>();
         }
 
         public Rsolver(string strs) {
@@ -33,7 +31,6 @@ namespace RML.Lang {
             idx = 0;
             model = Model.STR;
             ansTk = new Rtoken();
-            reduceBlk = new List<Rtoken>();
         }
 
         public Rsolver(List<Rtoken> blk) {
@@ -43,7 +40,6 @@ namespace RML.Lang {
             idx = 0;
             model = Model.BLK;
             ansTk = new Rtoken();
-            reduceBlk = new List<Rtoken>();
         }
 
         public void InputStr(string s) {
@@ -53,7 +49,6 @@ namespace RML.Lang {
             idx = 0;
             model = Model.STR;
             ansTk = new Rtoken();
-            reduceBlk = new List<Rtoken>();
         }
 
         public void InputBlk(List<Rtoken> blk) {
@@ -63,7 +58,6 @@ namespace RML.Lang {
             idx = 0;
             model = Model.BLK;
             ansTk = new Rtoken();
-            reduceBlk = new List<Rtoken>();
         }
 
 
@@ -72,24 +66,39 @@ namespace RML.Lang {
             while(idx < inpLen) {
                 EvalOne(ctx);
                 if(ansTk.tp.Equals(Rtype.Flow)) {
-                    if (ansTk.GetFlow().name.Equals("opAns")) {
-                        if (reduceBlk.Count > 0) {
-                            reduceBlk.RemoveAt(reduceBlk.Count - 1);
-                        }
+                    if (ansTk.GetFlow().name.Equals("opAns")) {              
                         ansTk = ansTk.GetFlow().val;
-                    }else if (ansTk.GetFlow().name.Equals("pass")) { 
+                    } else if (ansTk.GetFlow().name.Equals("pass")) {
                     
                     } else {
                         return ansTk;
                     }
                     
                 } 
-
-                reduceBlk.Add(ansTk);
             }
-
-
             return ansTk;
+        }
+
+        public List<Rtoken> Reduce(Rtable ctx) {
+            List<Rtoken> result = new List<Rtoken>();
+            while (idx < inpLen) {
+                EvalOne(ctx);
+                if (ansTk.tp.Equals(Rtype.Flow)) {
+                    if (ansTk.GetFlow().name.Equals("opAns")) {
+                        if(result.Count > 0) {
+                            result.RemoveAt(result.Count - 1);
+                        }
+                        ansTk = ansTk.GetFlow().val;
+                    } else if (ansTk.GetFlow().name.Equals("return ")) {
+                        ansTk = ansTk.GetFlow().val;
+                    } else {
+                        return result;
+                    }
+
+                }
+                result.Add(ansTk);
+            }
+            return result;
         }
 
 
@@ -125,6 +134,9 @@ namespace RML.Lang {
                         return new Rtoken(Rtype.Err, "Error: Incomplete expression!!!");
                     }
                     ansTk = f.Run(fArgs, ctx);
+                    if(ansTk.tp.Equals(Rtype.Flow) && ansTk.GetFlow().name.Equals("return")) {
+                        ansTk = ansTk.GetFlow().val;
+                    }
                     return ansTk;
 
                 case Rtype.Native:
@@ -172,6 +184,40 @@ namespace RML.Lang {
                 args.Add(ansTk);
             }
         }
+
+
+
+        public static List<Rtoken> Compose(List<Rtoken> blk, Rtable ctx) {
+            List<Rtoken> result = new List<Rtoken>();
+            foreach(Rtoken item in blk) {
+                if (item.tp.Equals(Rtype.Paren)) {
+                    result.Add(new Rsolver(item.GetList()).Eval(ctx));
+                } else {
+                    result.Add(item);
+                }
+            }
+
+            return result;
+        }
+
+
+        public static List<Rtoken> ComposeDeep(List<Rtoken> blk, Rtable ctx) {
+            List<Rtoken> result = new List<Rtoken>();
+            foreach (Rtoken item in blk) {
+                if (item.tp.Equals(Rtype.Paren)) {
+                    result.Add(new Rsolver(item.GetList()).Eval(ctx));
+                } else if (item.tp.Equals(Rtype.Block)) {
+                    List<Rtoken> list = ComposeDeep(item.GetList(), ctx);
+                    result.Add(new Rtoken(Rtype.Block, list));
+                } else {
+                    result.Add(item);
+                }
+            }
+
+            return result;
+
+        }
+
 
 
     }

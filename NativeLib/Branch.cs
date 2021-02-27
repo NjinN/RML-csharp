@@ -32,7 +32,7 @@ namespace RML.NativeLib {
             }
 
 
-            return new Rtoken(Rtype.Err, "Error: Types mismatch for native::if");
+            return ErrorInfo(args);
         }
     }
 
@@ -72,7 +72,7 @@ namespace RML.NativeLib {
             }
 
 
-            return new Rtoken(Rtype.Err, "Error: Types mismatch for native::elif");
+            return ErrorInfo(args);
         }
     }
 
@@ -101,7 +101,7 @@ namespace RML.NativeLib {
                 return new Rtoken();
             }
 
-            return new Rtoken(Rtype.Err, "Error: Types mismatch for native::else");
+            return ErrorInfo(args);
         }
     }
 
@@ -135,7 +135,7 @@ namespace RML.NativeLib {
             }
 
 
-            return new Rtoken(Rtype.Err, "Error: Types mismatch for native::either");
+            return ErrorInfo(args);
         }
     }
 

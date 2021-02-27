@@ -39,14 +39,14 @@ namespace RML.Lang {
                     if (table.ContainsKey(k)) {
                         table.Remove(k);
                     }
-                    table.Add(k, v);
+                    table.Add(k, v.Copy());
                 }
 
             } else {
                 if (table.ContainsKey(k)) {
                     table.Remove(k);
                 }
-                table.Add(k, v);
+                table.Add(k, v.Copy());
             }
         }
 

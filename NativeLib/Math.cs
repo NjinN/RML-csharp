@@ -46,13 +46,13 @@ namespace RML.NativeLib {
         public Rtoken AddIntFloat(List<Rtoken> args) {
             int argl = args[0].GetInt();
             decimal argr = args[1].GetFloat();
-            return new Rtoken(Rtype.Float, (decimal)argl + argr);
+            return new Rtoken(Rtype.Float, argl + argr);
         }
 
         public Rtoken AddFloatInt(List<Rtoken> args) {
             decimal argl = args[0].GetFloat();
             int argr = args[1].GetInt();
-            return new Rtoken(Rtype.Float, argl + (decimal)argr);
+            return new Rtoken(Rtype.Float, argl + argr);
         }
 
         public Rtoken AddFloatFloat(List<Rtoken> args) {
@@ -107,13 +107,13 @@ namespace RML.NativeLib {
         public Rtoken SubIntFloat(List<Rtoken> args) {
             int argl = args[0].GetInt();
             decimal argr = args[1].GetFloat();
-            return new Rtoken(Rtype.Float, (decimal)argl - argr);
+            return new Rtoken(Rtype.Float, argl - argr);
         }
 
         public Rtoken SubFloatInt(List<Rtoken> args) {
             decimal argl = args[0].GetFloat();
             int argr = args[1].GetInt();
-            return new Rtoken(Rtype.Float, argl - (decimal)argr);
+            return new Rtoken(Rtype.Float, argl - argr);
         }
 
         public Rtoken SubFloatFloat(List<Rtoken> args) {
@@ -161,13 +161,13 @@ namespace RML.NativeLib {
         public Rtoken MulIntFloat(List<Rtoken> args) {
             int argl = args[0].GetInt();
             decimal argr = args[1].GetFloat();
-            return new Rtoken(Rtype.Float, (decimal)argl * argr);
+            return new Rtoken(Rtype.Float, argl * argr);
         }
 
         public Rtoken MulFloatInt(List<Rtoken> args) {
             decimal argl = args[0].GetFloat();
             int argr = args[1].GetInt();
-            return new Rtoken(Rtype.Float, argl * (decimal)argr);
+            return new Rtoken(Rtype.Float, argl * argr);
         }
 
         public Rtoken MulFloatFloat(List<Rtoken> args) {
@@ -221,13 +221,13 @@ namespace RML.NativeLib {
         public Rtoken DivIntFloat(List<Rtoken> args) {
             int argl = args[0].GetInt();
             decimal argr = args[1].GetFloat();
-            return new Rtoken(Rtype.Float, (decimal)argl / argr);
+            return new Rtoken(Rtype.Float, argl / argr);
         }
 
         public Rtoken DivFloatInt(List<Rtoken> args) {
             decimal argl = args[0].GetFloat();
             int argr = args[1].GetInt();
-            return new Rtoken(Rtype.Float, argl / (decimal)argr);
+            return new Rtoken(Rtype.Float, argl / argr);
         }
 
         public Rtoken DivFloatFloat(List<Rtoken> args) {
@@ -279,13 +279,13 @@ namespace RML.NativeLib {
         public Rtoken ModIntFloat(List<Rtoken> args) {
             int argl = args[0].GetInt();
             decimal argr = args[1].GetFloat();
-            return new Rtoken(Rtype.Float, (decimal)argl % argr);
+            return new Rtoken(Rtype.Float, argl % argr);
         }
 
         public Rtoken ModFloatInt(List<Rtoken> args) {
             decimal argl = args[0].GetFloat();
             int argr = args[1].GetInt();
-            return new Rtoken(Rtype.Float, argl % (decimal)argr);
+            return new Rtoken(Rtype.Float, argl % argr);
         }
 
         public Rtoken ModFloatFloat(List<Rtoken> args) {
@@ -299,7 +299,419 @@ namespace RML.NativeLib {
     }
 
 
+    class AddSet : Rnative {
+        public AddSet() {
+            name = "add-set";
+            argsLen = 2;
+        }
 
+        public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
+            Rtype ltype = args[0].tp;
+            Rtype rtype = args[1].tp;
+
+            if (ltype.Equals(Rtype.Int)) {
+                if (rtype.Equals(Rtype.Int)) {
+                    return AddSetIntInt(args);
+                } else if (rtype.Equals(Rtype.Float)) {
+                    return AddSetIntFloat(args);
+                }
+
+            } else if (ltype.Equals(Rtype.Float)) {
+                if (rtype.Equals(Rtype.Int)) {
+                    return AddSetFloatInt(args);
+                } else if (rtype.Equals(Rtype.Float)) {
+                    return AddSetFloatFloat(args);
+                }
+
+            } else if (ltype.Equals(Rtype.Str)) {
+                if (rtype.Equals(Rtype.Str)) {
+                    return AddStrStr(args);
+                }
+            }
+
+            return ErrorInfo(args);
+        }
+
+        public Rtoken AddSetIntInt(List<Rtoken> args) {
+            if(Renv.threads > 1) {
+                lock (args[0]) {
+                    args[0].val = (int)args[0].val + (int)args[1].val;
+                }
+            } else {
+                args[0].val = (int)args[0].val + (int)args[1].val;
+            }
+            return args[0];
+        }
+
+        public Rtoken AddSetIntFloat(List<Rtoken> args) {
+            if (Renv.threads > 1) {
+                lock (args[0]) {
+                    args[0].tp = Rtype.Float;
+                    args[0].val = args[0].GetInt() + (decimal)args[1].val;
+                }
+            } else {
+                args[0].tp = Rtype.Float;
+                args[0].val = args[0].GetInt() + (decimal)args[1].val;
+            }
+            return args[0];
+        }
+
+        public Rtoken AddSetFloatInt(List<Rtoken> args) {
+            if (Renv.threads > 1) {
+                lock (args[0]) {
+                    args[0].val = (decimal)args[0].val + args[1].GetInt();
+                }
+            } else {
+                args[0].val = (decimal)args[0].val + args[1].GetInt();
+            }
+            return args[0];
+        }
+
+        public Rtoken AddSetFloatFloat(List<Rtoken> args) {
+            if (Renv.threads > 1) {
+                lock (args[0]) {
+                    args[0].val = (decimal)args[0].val + (decimal)args[1].val;
+                }
+            } else {
+                args[0].val = (decimal)args[0].val + (decimal)args[1].val;
+            }
+            return args[0];
+        }
+
+        public Rtoken AddStrStr(List<Rtoken> args) {
+            if (Renv.threads > 1) {
+                lock (args[0]) {
+                    args[0].val = args[0].GetStr() + args[1].GetStr();
+                }
+            } else {
+                args[0].val = args[0].GetStr() + args[1].GetStr();
+            }
+            return args[0];
+        }
+
+    }
+
+
+
+
+
+    class SubSet : Rnative {
+        public SubSet() {
+            name = "sub-set";
+            argsLen = 2;
+        }
+
+        public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
+            Rtype ltype = args[0].tp;
+            Rtype rtype = args[1].tp;
+
+            if (ltype.Equals(Rtype.Int)) {
+                if (rtype.Equals(Rtype.Int)) {
+                    return SubSetIntInt(args);
+                } else if (rtype.Equals(Rtype.Float)) {
+                    return SubSetIntFloat(args);
+                }
+
+            } else if (ltype.Equals(Rtype.Float)) {
+                if (rtype.Equals(Rtype.Int)) {
+                    return SubSetFloatInt(args);
+                } else if (rtype.Equals(Rtype.Float)) {
+                    return SubSetFloatFloat(args);
+                }
+
+            }
+
+            return ErrorInfo(args);
+        }
+
+        public Rtoken SubSetIntInt(List<Rtoken> args) {
+            if (Renv.threads > 1) {
+                lock (args[0]) {
+                    args[0].val = (int)args[0].val - (int)args[1].val;
+                }
+            } else {
+                args[0].val = (int)args[0].val - (int)args[1].val;
+            }
+            return args[0];
+        }
+
+        public Rtoken SubSetIntFloat(List<Rtoken> args) {
+            if (Renv.threads > 1) {
+                lock (args[0]) {
+                    args[0].tp = Rtype.Float;
+                    args[0].val = args[0].GetInt() - (decimal)args[1].val;
+                }
+            } else {
+                args[0].tp = Rtype.Float;
+                args[0].val = args[0].GetInt() - (decimal)args[1].val;
+            }
+            return args[0];
+        }
+
+        public Rtoken SubSetFloatInt(List<Rtoken> args) {
+            if (Renv.threads > 1) {
+                lock (args[0]) {
+                    args[0].val = (decimal)args[0].val - args[1].GetInt();
+                }
+            } else {
+                args[0].val = (decimal)args[0].val - args[1].GetInt();
+            }
+            return args[0];
+        }
+
+        public Rtoken SubSetFloatFloat(List<Rtoken> args) {
+            if (Renv.threads > 1) {
+                lock (args[0]) {
+                    args[0].val = (decimal)args[0].val - (decimal)args[1].val;
+                }
+            } else {
+                args[0].val = (decimal)args[0].val - (decimal)args[1].val;
+            }
+            return args[0];
+        }
+
+    }
+
+
+
+    class MulSet : Rnative {
+        public MulSet() {
+            name = "mul-set";
+            argsLen = 2;
+        }
+
+        public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
+            Rtype ltype = args[0].tp;
+            Rtype rtype = args[1].tp;
+
+            if (ltype.Equals(Rtype.Int)) {
+                if (rtype.Equals(Rtype.Int)) {
+                    return MulSetIntInt(args);
+                } else if (rtype.Equals(Rtype.Float)) {
+                    return MulSetIntFloat(args);
+                }
+
+            } else if (ltype.Equals(Rtype.Float)) {
+                if (rtype.Equals(Rtype.Int)) {
+                    return MulSetFloatInt(args);
+                } else if (rtype.Equals(Rtype.Float)) {
+                    return MulSetFloatFloat(args);
+                }
+
+            }
+
+            return ErrorInfo(args);
+        }
+
+        public Rtoken MulSetIntInt(List<Rtoken> args) {
+            if (Renv.threads > 1) {
+                lock (args[0]) {
+                    args[0].val = (int)args[0].val * (int)args[1].val;
+                }
+            } else {
+                args[0].val = (int)args[0].val * (int)args[1].val;
+            }
+            return args[0];
+        }
+
+        public Rtoken MulSetIntFloat(List<Rtoken> args) {
+            if (Renv.threads > 1) {
+                lock (args[0]) {
+                    args[0].tp = Rtype.Float;
+                    args[0].val = args[0].GetInt() * (decimal)args[1].val;
+                }
+            } else {
+                args[0].tp = Rtype.Float;
+                args[0].val = args[0].GetInt() * (decimal)args[1].val;
+            }
+            return args[0];
+        }
+
+        public Rtoken MulSetFloatInt(List<Rtoken> args) {
+            if (Renv.threads > 1) {
+                lock (args[0]) {
+                    args[0].val = (decimal)args[0].val * args[1].GetInt();
+                }
+            } else {
+                args[0].val = (decimal)args[0].val * args[1].GetInt();
+            }
+            return args[0];
+        }
+
+        public Rtoken MulSetFloatFloat(List<Rtoken> args) {
+            if (Renv.threads > 1) {
+                lock (args[0]) {
+                    args[0].val = (decimal)args[0].val * (decimal)args[1].val;
+                }
+            } else {
+                args[0].val = (decimal)args[0].val * (decimal)args[1].val;
+            }
+            return args[0];
+        }
+
+    }
+
+
+
+
+    class DivSet : Rnative {
+        public DivSet() {
+            name = "div-set";
+            argsLen = 2;
+        }
+
+        public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
+            Rtype ltype = args[0].tp;
+            Rtype rtype = args[1].tp;
+
+            if (ltype.Equals(Rtype.Int)) {
+                if (rtype.Equals(Rtype.Int)) {
+                    return DivSetIntInt(args);
+                } else if (rtype.Equals(Rtype.Float)) {
+                    return DivSetIntFloat(args);
+                }
+
+            } else if (ltype.Equals(Rtype.Float)) {
+                if (rtype.Equals(Rtype.Int)) {
+                    return DivSetFloatInt(args);
+                } else if (rtype.Equals(Rtype.Float)) {
+                    return DivSetFloatFloat(args);
+                }
+
+            }
+
+            return ErrorInfo(args);
+        }
+
+        public Rtoken DivSetIntInt(List<Rtoken> args) {
+            if (Renv.threads > 1) {
+                lock (args[0]) {
+                    args[0].tp = Rtype.Float;
+                    args[0].val = (decimal)args[0].GetInt() / (decimal)args[1].GetInt();
+                }
+            } else {
+                args[0].tp = Rtype.Float;
+                args[0].val = (decimal)args[0].GetInt() / (decimal)args[1].GetInt();
+            }
+            return args[0];
+        }
+
+        public Rtoken DivSetIntFloat(List<Rtoken> args) {
+            if (Renv.threads > 1) {
+                lock (args[0]) {
+                    args[0].tp = Rtype.Float;
+                    args[0].val = args[0].GetInt() / (decimal)args[1].val;
+                }
+            } else {
+                args[0].tp = Rtype.Float;
+                args[0].val = args[0].GetInt() / (decimal)args[1].val;
+            }
+            return args[0];
+        }
+
+        public Rtoken DivSetFloatInt(List<Rtoken> args) {
+            if (Renv.threads > 1) {
+                lock (args[0]) {
+                    args[0].val = (decimal)args[0].val / args[1].GetInt();
+                }
+            } else {
+                args[0].val = (decimal)args[0].val / args[1].GetInt();
+            }
+            return args[0];
+        }
+
+        public Rtoken DivSetFloatFloat(List<Rtoken> args) {
+            if (Renv.threads > 1) {
+                lock (args[0]) {
+                    args[0].val = (decimal)args[0].val / (decimal)args[1].val;
+                }
+            } else {
+                args[0].val = (decimal)args[0].val / (decimal)args[1].val;
+            }
+            return args[0];
+        }
+
+    }
+
+
+
+
+    class ModSet : Rnative {
+        public ModSet() {
+            name = "mod-set";
+            argsLen = 2;
+        }
+
+        public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
+            Rtype ltype = args[0].tp;
+            Rtype rtype = args[1].tp;
+
+            if (ltype.Equals(Rtype.Int)) {
+                if (rtype.Equals(Rtype.Int)) {
+                    return ModSetIntInt(args);
+                } else if (rtype.Equals(Rtype.Float)) {
+                    return ModSetIntFloat(args);
+                }
+
+            } else if (ltype.Equals(Rtype.Float)) {
+                if (rtype.Equals(Rtype.Int)) {
+                    return ModSetFloatInt(args);
+                } else if (rtype.Equals(Rtype.Float)) {
+                    return ModSetFloatFloat(args);
+                }
+
+            }
+
+            return ErrorInfo(args);
+        }
+
+        public Rtoken ModSetIntInt(List<Rtoken> args) {
+            if (Renv.threads > 1) {
+                lock (args[0]) {              
+                    args[0].val = (int)args[0].val % (int)args[1].val;
+                }
+            } else {
+                args[0].val = (int)args[0].val % (int)args[1].val;
+            }
+            return args[0];
+        }
+
+        public Rtoken ModSetIntFloat(List<Rtoken> args) {
+            if (Renv.threads > 1) {
+                lock (args[0]) {
+                    args[0].tp = Rtype.Float;
+                    args[0].val = args[0].GetInt() % (decimal)args[1].val;
+                }
+            } else {
+                args[0].tp = Rtype.Float;
+                args[0].val = args[0].GetInt() % (decimal)args[1].val;
+            }
+            return args[0];
+        }
+
+        public Rtoken ModSetFloatInt(List<Rtoken> args) {
+            if (Renv.threads > 1) {
+                lock (args[0]) {
+                    args[0].val = (decimal)args[0].val % args[1].GetInt();
+                }
+            } else {
+                args[0].val = (decimal)args[0].val % args[1].GetInt();
+            }
+            return args[0];
+        }
+
+        public Rtoken ModSetFloatFloat(List<Rtoken> args) {
+            if (Renv.threads > 1) {
+                lock (args[0]) {
+                    args[0].val = (decimal)args[0].val % (decimal)args[1].val;
+                }
+            } else {
+                args[0].val = (decimal)args[0].val % (decimal)args[1].val;
+            }
+            return args[0];
+        }
+
+    }
 
 
 

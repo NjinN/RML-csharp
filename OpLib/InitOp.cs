@@ -12,6 +12,11 @@ namespace RML.OpLib {
             ctx.PutNow("*", new Rtoken(Rtype.Op, new Mul()));
             ctx.PutNow("/", new Rtoken(Rtype.Op, new Div()));
             ctx.PutNow("%", new Rtoken(Rtype.Op, new Mod()));
+            ctx.PutNow("+=", new Rtoken(Rtype.Op, new AddSet()));
+            ctx.PutNow("-=", new Rtoken(Rtype.Op, new SubSet()));
+            ctx.PutNow("*=", new Rtoken(Rtype.Op, new MulSet()));
+            ctx.PutNow("/=", new Rtoken(Rtype.Op, new DivSet()));
+            ctx.PutNow("%=", new Rtoken(Rtype.Op, new ModSet()));
 
             ctx.PutNow("=", new Rtoken(Rtype.Op, new Eq()));
             ctx.PutNow("<", new Rtoken(Rtype.Op, new Lt()));

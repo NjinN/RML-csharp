@@ -20,6 +20,11 @@ namespace RML.NativeLib {
             ctx.PutNow("mul", new Rtoken(Rtype.Native, new Mul()));
             ctx.PutNow("div", new Rtoken(Rtype.Native, new Div()));
             ctx.PutNow("mod", new Rtoken(Rtype.Native, new Mod()));
+            ctx.PutNow("add-set", new Rtoken(Rtype.Native, new AddSet()));
+            ctx.PutNow("sub-set", new Rtoken(Rtype.Native, new SubSet()));
+            ctx.PutNow("mul-set", new Rtoken(Rtype.Native, new MulSet()));
+            ctx.PutNow("div-set", new Rtoken(Rtype.Native, new DivSet()));
+            ctx.PutNow("mod-set", new Rtoken(Rtype.Native, new ModSet()));
 
             ctx.PutNow("eq", new Rtoken(Rtype.Native, new Eq()));
             ctx.PutNow("lt", new Rtoken(Rtype.Native, new Lt()));

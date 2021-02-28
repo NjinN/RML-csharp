@@ -12,6 +12,7 @@ namespace RML.Lang {
         public int idx;
         public Model model;
         public Rtoken ansTk;
+        public bool isLocal;
 
         //public Rsolver() { }
 
@@ -22,6 +23,7 @@ namespace RML.Lang {
             idx = 0;
             model = Model.STR;
             ansTk = new Rtoken();
+            isLocal = false;
         }
 
         public Rsolver(string strs) {
@@ -31,6 +33,7 @@ namespace RML.Lang {
             idx = 0;
             model = Model.STR;
             ansTk = new Rtoken();
+            isLocal = false;
         }
 
         public Rsolver(List<Rtoken> blk) {
@@ -40,6 +43,7 @@ namespace RML.Lang {
             idx = 0;
             model = Model.BLK;
             ansTk = new Rtoken();
+            isLocal = false;
         }
 
         public void InputStr(string s) {
@@ -74,6 +78,8 @@ namespace RML.Lang {
                         return ansTk;
                     }
                     
+                }else if (ansTk.tp.Equals(Rtype.Err)) {
+                    return ansTk;
                 } 
             }
             return ansTk;
@@ -122,10 +128,30 @@ namespace RML.Lang {
                         return new Rtoken(Rtype.Err, "Error: Incomplete expression!!!");
                     }
                     Rtoken v = EvalOne(ctx);
-                    ctx.Put(currTk.GetStr(), v);
+                    if (isLocal) {
+                        ctx.PutNow(currTk.GetStr(), v);
+                    } else {
+                        ctx.Put(currTk.GetStr(), v);
+                    }
                     ansTk = v;
                     return v;
+                case Rtype.SetPath:
+                    List<Rtoken> list = currTk.GetList();
 
+                    Rtoken value = EvalOne(ctx);
+                    switch (list[0].tp) {
+                        case Rtype.Block:
+                            list[0].PutList(list[1].GetInt(), value);
+                            break;
+                        case Rtype.Object:
+                            list[0].GetTable().PutNow(list[1].GetStr(), value);
+                            break;
+                        default:
+                            ansTk = new Rtoken(Rtype.Err, "Error: Illegal  expression!!!");
+                            return ansTk;
+                    }
+                    ansTk = value;
+                    return ansTk;
                 case Rtype.Func:
                     Rfunc f = currTk.GetFunc();
                     List<Rtoken> fArgs = new List<Rtoken>();

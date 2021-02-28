@@ -36,17 +36,21 @@ namespace RML.Lang {
         public void PutNow(string k, Rtoken v) {
             if(Renv.threads > 1) {
                 lock (this) {
-                    if (table.ContainsKey(k)) {
-                        table.Remove(k);
+                    Rtoken tk = table.GetValueOrDefault(k, null);
+                    if(null == tk) {
+                        table.Add(k, v.Copy());
+                    } else {
+                        tk.Copy(v);
                     }
-                    table.Add(k, v.Copy());
                 }
 
             } else {
-                if (table.ContainsKey(k)) {
-                    table.Remove(k);
+                Rtoken tk = table.GetValueOrDefault(k, null);
+                if (null == tk) {
+                    table.Add(k, v.Copy());
+                } else {
+                    tk.Copy(v);
                 }
-                table.Add(k, v.Copy());
             }
         }
 

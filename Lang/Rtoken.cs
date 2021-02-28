@@ -47,6 +47,10 @@ namespace RML.Lang {
             return (List<Rtoken>)val;
         }
 
+        public Rtable GetTable() {
+            return (Rtable)val;
+        }
+
         public Rword GetWord() {
             return (Rword)val;
         }
@@ -86,35 +90,66 @@ namespace RML.Lang {
                 case Rtype.Str:
                     return '"' + GetStr() + '"';
                 case Rtype.Block: { }
-                    sb.Append("[");
+                    sb.Append('[');
                     foreach(Rtoken item in GetList()) {
                         sb.Append(item.ToStr());
-                        sb.Append(" ");
+                        sb.Append(' ');
                     }
                     if(sb.Length > 1) {
                         sb.Remove(sb.Length - 1, 1);
                     }
-                    sb.Append("]");
+                    sb.Append(']');
                     return sb.ToString();
                 case Rtype.Paren:
-                    sb.Append("(");
+                    sb.Append('(');
                     foreach (Rtoken item in GetList()) {
                         sb.Append(item.ToStr());
-                        sb.Append(" ");
+                        sb.Append(' ');
                     }
                     if (sb.Length > 1) {
                         sb.Remove(sb.Length - 1, 1);
                     }
-                    sb.Append(")");
+                    sb.Append(')');
+                    return sb.ToString();
+                case Rtype.Object:
+                    sb.Append('{');
+                    foreach (var item in GetTable().table) {
+                        sb.Append(item.Key);
+                        sb.Append(": ");
+                        sb.Append(item.Value.ToStr());
+                        sb.Append(' ');
+                    }
+                    if (sb.Length > 1) {
+                        sb.Remove(sb.Length - 1, 1);
+                    }
+                    sb.Append('}');
                     return sb.ToString();
                 case Rtype.Flow:
                     return "flow::()";
                 case Rtype.Word:
                     return GetWord().key;
+                case Rtype.Path:
+                    foreach (Rtoken item in GetList()) {
+                        sb.Append(item.ToStr());
+                        sb.Append('/');
+                    }
+                    if (sb.Length > 1) {
+                        sb.Remove(sb.Length - 1, 1);
+                    }
+                    return sb.ToString();
                 case Rtype.LitWord:
                     return "'" + GetStr();
                 case Rtype.SetWord:
                     return GetStr() + ":";
+                case Rtype.SetPath:
+                    foreach (Rtoken item in GetList()) {
+                        sb.Append(item.ToStr());
+                        sb.Append('/');
+                    }
+                    if (sb.Length > 1) {
+                        sb.Remove(sb.Length - 1, 1);
+                    }
+                    return sb.ToString();
                 case Rtype.Func:
                     return "Function";
                 case Rtype.Native:
@@ -161,6 +196,9 @@ namespace RML.Lang {
 
                 case Rtype.Paren:
                     return new Rsolver(GetList()).Eval(ctx);
+                case Rtype.Path:
+                case Rtype.SetPath:
+                    return GetPathVal(ctx);
 
                 default:
                     return this;
@@ -168,10 +206,90 @@ namespace RML.Lang {
         }
 
 
+        public Rtoken GetPathVal(Rtable ctx) {
+            List<Rtoken> list = GetList();
+            if (!list[0].tp.Equals(Rtype.Word)) {
+                return new Rtoken(Rtype.Err, "Error: illegal path! of " + ToStr());
+            }
+            Rtoken errTk = new Rtoken(Rtype.Err, "Error: illegal path! of " + ToStr());
+            Rtoken currTk = null;
+            int i = 0;
+            do {
+                Rtoken index = list[i];
+                if (index.tp.Equals(Rtype.Paren)) {
+                    index = index.GetVal(ctx);
+                }
+
+                if(i == 0) {
+                    if (!index.tp.Equals(Rtype.Word)) {
+                        return errTk;
+                    }
+                    currTk = ctx.Get(index.GetWord().key);
+                    i++;
+                    continue;
+                }
+
+                switch (currTk.tp) {
+                    case Rtype.Block:
+                    case Rtype.Paren:
+                        if (index.tp.Equals(Rtype.Int)) {
+                            int ii = index.GetInt();
+                            if (ii <= 0 || ii > currTk.GetList().Count) {
+                                return new Rtoken(Rtype.Err, "Error: index out of bound for " + ToStr());
+                            }
+                            currTk = currTk.GetList()[index.GetInt() - 1];
+
+                        } else if (index.tp.Equals(Rtype.SetWord)) { 
+                            if(StrKit.IsNumberStr(index.GetStr()) == 0 ) {
+                                currTk = new Rtoken(Rtype.SetPath, new List<Rtoken>() { currTk,  RtokenKit.MakeRtoken(index.GetStr(), ctx) });
+                            } else {
+                                return errTk;
+                            }
+
+                        } else {
+                            return errTk;
+                        }
+                        break;
+
+                    case Rtype.Object:
+                        switch (index.tp) {
+                            case Rtype.SetWord:
+                                currTk = new Rtoken(Rtype.SetPath, new List<Rtoken>(){currTk, index});
+                                break;
+                            case Rtype.Word:
+                                Rtoken obj = currTk;
+                                currTk = currTk.GetTable().GetNow(index.GetWord().key);
+                                if(currTk.tp.Equals(Rtype.Func)) {
+                                    new Rtoken(Rtype.Path, new List<Rtoken>() {currTk, obj });
+                                }
+                                break;
+                            default:
+                                return errTk;
+                        }
+                        break;
+
+                    default:
+                        return errTk;
+                }
+
+
+
+                i++;
+            } while (i < list.Count);
+
+            return currTk;
+
+        }
+
+
         public Rtoken Clone() {
             return new Rtoken(tp, val);
         }
 
+        public void Copy(Rtoken tk) {
+            tp = tk.tp;
+            val = tk.val;
+        }
 
         public Rtoken Copy() {
             switch (tp) {
@@ -188,5 +306,51 @@ namespace RML.Lang {
             }
         }
 
+        public Rtoken PutList(int idx, Rtoken v) {
+            if(idx <= 0) {
+                return new Rtoken(Rtype.Err, "Error: index out of bound");
+            }
+
+            if(Renv.threads > 1) {
+                lock (this) {
+                    var list = GetList();
+                    if (idx <= list.Count) {
+                        list[idx - 1].Copy(v);
+                        return list[idx - 1];
+                    }
+
+                    int i = list.Count;
+                    while (i < idx - 1) {
+                        i++;
+                        list.Add(new Rtoken(Rtype.None, 0));
+                    }
+                    list.Add(v);
+                    val = list;
+                    return list[idx - 1];
+                }
+            } else {
+                var list = GetList();
+                if(idx <= list.Count) {
+                    list[idx - 1].Copy(v);
+                    return list[idx - 1];
+                }
+
+                int i = list.Count;
+                while(i < idx - 1) {
+                    i++;
+                    list.Add(new Rtoken(Rtype.None, 0));
+                }
+                list.Add(v);
+                val = list;
+                return list[idx-1];
+            }
+
+            
+        }
+
+
+
     }
+
+
 }

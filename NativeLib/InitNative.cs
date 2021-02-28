@@ -43,6 +43,10 @@ namespace RML.NativeLib {
             ctx.PutNow("loop", new Rtoken(Rtype.Native, new Rloop()));
             ctx.PutNow("repeat", new Rtoken(Rtype.Native, new Repeat()));
 
+            ctx.PutNow("fork", new Rtoken(Rtype.Native, new Rfork()));
+            ctx.PutNow("spawn", new Rtoken(Rtype.Native, new Rspawn()));
+            ctx.PutNow("lock", new Rtoken(Rtype.Native, new Rlock()));
+
         }
 
 

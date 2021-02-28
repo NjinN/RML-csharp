@@ -34,6 +34,10 @@ namespace RML.Lang {
             while (idx < cs.Length) {
                 if (char.IsWhiteSpace(cs[idx])) {
                     break;
+                }else if (cs[idx].Equals('/')) {
+                    idx = start;
+                    TakePath(cs, ref idx);
+                    return new string(cs[start..idx]);
                 }
 
                 idx++;
@@ -124,6 +128,34 @@ namespace RML.Lang {
         }
 
 
+        public static List<string> TakePath(char[] cs, ref int idx) {
+            List<string> result = new List<string>();
+            do {
+                if (cs[idx].Equals('/')) {
+                    idx++;
+                }
+
+                if (cs[idx].Equals('"')) {
+                    result.Add(TakeStr(cs, ref idx));
+                    continue;
+                }else if (cs[idx].Equals('(')) {
+                    result.Add(TakeParen(cs, ref idx));
+                    continue;
+                }
+
+                int start = idx;
+                while(idx < cs.Length && !cs[idx].Equals('/') && !char.IsWhiteSpace(cs[idx])) {
+                    idx++;
+                }
+                result.Add(new string(cs[start..idx]));
+
+            } while (idx < cs.Length && cs[idx].Equals('/'));
+
+            return result;
+        }
+
+
+
         public static int IsNumberStr(string s) {
             char[] cs = s.ToCharArray();
             int idx = 0;
@@ -152,6 +184,7 @@ namespace RML.Lang {
 
             return dot;
         }
+
 
     }
 

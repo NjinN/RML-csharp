@@ -49,7 +49,7 @@ namespace RML.Lang {
                 return new Rtoken(Rtype.LitWord, str.Substring(1, str.Length - 1));
             }
 
-            if (str.EndsWith(':')) {
+            if (str.EndsWith(':') && !str.Contains('/')) {
                 return new Rtoken(Rtype.SetWord, str.Substring(0, str.Length - 1));
             }
 
@@ -59,6 +59,30 @@ namespace RML.Lang {
 
             if (str.StartsWith('(')) {
                 return new Rtoken(Rtype.Paren, MakeRtokens(str.Substring(1, str.Length - 2), ctx));
+            }
+
+            if (str.StartsWith('{')) {
+                Rtable tb = new Rtable(Rtable.Type.USR, ctx);
+                Rsolver solver = new Rsolver(str.Substring(1, str.Length - 2));
+                solver.isLocal = true;
+                solver.Eval(tb);
+
+                return new Rtoken(Rtype.Object, tb);
+            }
+
+            if(!str.Equals("/") && !str.Equals("/=") && str.Contains('/')) {
+                int i = 0;
+                List<string> strs = StrKit.TakePath(str.ToCharArray(), ref i);
+                List<Rtoken> list = new List<Rtoken>();
+                foreach(var item in strs) {
+                    list.Add(MakeRtoken(item, ctx));
+                }
+                if (str.EndsWith(':')) {
+                    return new Rtoken(Rtype.SetPath, list);
+                } else {
+                    return new Rtoken(Rtype.Path, list);
+                }
+                
             }
 
 
@@ -106,10 +130,14 @@ namespace RML.Lang {
                     return "flow!";
                 case Rtype.Word: 
                     return "word!";
+                case Rtype.Path:
+                    return "path!";
                 case Rtype.LitWord:
                     return "lit-word!";
                 case Rtype.SetWord:
                     return "set-word!";
+                case Rtype.SetPath:
+                    return "set-path!";
                 case Rtype.Func:
                     return "func!";
                 case Rtype.Native:
@@ -154,10 +182,14 @@ namespace RML.Lang {
                     return Rtype.Flow;
                 case "word!":
                     return Rtype.Word;
+                case "path!":
+                    return Rtype.Path;
                 case "lit-word!":
                     return Rtype.LitWord;
                 case "set-word!":
                     return Rtype.SetWord;
+                case "set-path!":
+                    return Rtype.SetPath;
                 case "func!":
                     return Rtype.Func;
                 case "native!":

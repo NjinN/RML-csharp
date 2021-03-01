@@ -56,7 +56,7 @@ namespace RML.NativeLib {
                         idx++;
                     }
 
-                    return new Rtoken(Rtype.None, 0);
+                    return new Rtoken();
 
                 }else if (args[1].tp.Equals(Rtype.Str)) {
                     int idx = 0;
@@ -76,7 +76,7 @@ namespace RML.NativeLib {
                         idx++;
                     }
 
-                    return new Rtoken(Rtype.None, 0);
+                    return new Rtoken();
                 }
 
             }
@@ -93,6 +93,7 @@ namespace RML.NativeLib {
         public Repeat() {
             name = "repeat";
             argsLen = 3;
+            quoteList = new List<bool> {true, false, false};
         }
 
         public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
@@ -124,7 +125,7 @@ namespace RML.NativeLib {
                         
                     }
 
-                    return new Rtoken(Rtype.None, 0);
+                    return new Rtoken();
 
                 } else if (args[2].tp.Equals(Rtype.Str)) {
                     Rtoken cond = rCtx.GetNow(args[0].GetWord().key);
@@ -148,7 +149,7 @@ namespace RML.NativeLib {
 
                     }
 
-                    return new Rtoken(Rtype.None, 0);
+                    return new Rtoken();
                 }
 
             }

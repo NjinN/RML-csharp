@@ -68,7 +68,7 @@ namespace RML.Lang {
         public Rtoken Eval(Rtable ctx) {
             
             while(idx < inpLen) {
-                EvalOne(ctx);
+                EvalOne(ctx, false);
                 if(ansTk.tp.Equals(Rtype.Flow)) {
                     if (ansTk.GetFlow().name.Equals("opAns")) {              
                         ansTk = ansTk.GetFlow().val;
@@ -88,7 +88,7 @@ namespace RML.Lang {
         public List<Rtoken> Reduce(Rtable ctx) {
             List<Rtoken> result = new List<Rtoken>();
             while (idx < inpLen) {
-                EvalOne(ctx);
+                EvalOne(ctx, false);
                 if (ansTk.tp.Equals(Rtype.Flow)) {
                     if (ansTk.GetFlow().name.Equals("opAns")) {
                         if(result.Count > 0) {
@@ -108,7 +108,7 @@ namespace RML.Lang {
         }
 
 
-        public Rtoken EvalOne(Rtable ctx) {
+        public Rtoken EvalOne(Rtable ctx, bool quote) {
             Rtoken currTk;
 
 
@@ -120,6 +120,11 @@ namespace RML.Lang {
 
             idx++;
 
+            if (quote) {
+                ansTk = currTk;
+                return ansTk;
+            }
+
             currTk = currTk.GetVal(ctx);
 
             switch (currTk.tp) {
@@ -127,7 +132,7 @@ namespace RML.Lang {
                     if(idx == inpLen) {
                         return new Rtoken(Rtype.Err, "Error: Incomplete expression!!!");
                     }
-                    Rtoken v = EvalOne(ctx);
+                    Rtoken v = EvalOne(ctx, false);
                     if (isLocal) {
                         ctx.PutNow(currTk.GetStr(), v);
                     } else {
@@ -138,7 +143,7 @@ namespace RML.Lang {
                 case Rtype.SetPath:
                     List<Rtoken> list = currTk.GetList();
 
-                    Rtoken value = EvalOne(ctx);
+                    Rtoken value = EvalOne(ctx, false);
                     switch (list[0].tp) {
                         case Rtype.Block:
                             list[0].PutList(list[1].GetInt(), value);
@@ -155,7 +160,7 @@ namespace RML.Lang {
                 case Rtype.Func:
                     Rfunc f = currTk.GetFunc();
                     List<Rtoken> fArgs = new List<Rtoken>();
-                    EvalN(fArgs, ctx, f.argsLen);
+                    EvalN(fArgs, ctx, f.argsLen, null);
                     if(fArgs.Count < f.argsLen) {
                         return new Rtoken(Rtype.Err, "Error: Incomplete expression!!!");
                     }
@@ -168,7 +173,7 @@ namespace RML.Lang {
                 case Rtype.Native:
                     Rnative nv = currTk.GetNative();
                     List<Rtoken> nArgs = new List<Rtoken>();
-                    EvalN(nArgs, ctx, nv.argsLen);
+                    EvalN(nArgs, ctx, nv.argsLen, nv.quoteList);
                     if(nArgs.Count < nv.argsLen) {
                         ansTk = new Rtoken(Rtype.Err, "Error: Incomplete expression!!!");
                         return ansTk;
@@ -180,7 +185,7 @@ namespace RML.Lang {
                     Rnative op = currTk.GetNative();
                     List<Rtoken> oArgs = new List<Rtoken>();
                     oArgs.Add(ansTk);
-                    EvalN(oArgs, ctx, op.argsLen);
+                    EvalN(oArgs, ctx, op.argsLen, null);
                     if(oArgs.Count < op.argsLen) {
                         ansTk = new Rtoken(Rtype.Err, "Error: Incomplete expression!!!");
                         return ansTk;
@@ -197,9 +202,14 @@ namespace RML.Lang {
         }
 
         
-        public void EvalN(List<Rtoken> args, Rtable ctx, int n) {
+        public void EvalN(List<Rtoken> args, Rtable ctx, int n, List<bool> quoteList) {
             while(args.Count < n && idx < inpLen) {
-                EvalOne(ctx);
+                if(null == quoteList) {
+                    EvalOne(ctx, false);
+                } else {
+                    EvalOne(ctx, quoteList[args.Count]);
+                }
+                
                 if (ansTk.tp.Equals(Rtype.Flow) && ansTk.GetFlow().name.Equals("opAns")) {
                     if (args.Count > 0) {
                         args.RemoveAt(args.Count - 1);

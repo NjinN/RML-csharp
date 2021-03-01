@@ -9,6 +9,7 @@ namespace RML.Lang {
     abstract class Rnative{
         public string name;
         public int argsLen;
+        public List<bool> quoteList;
 
         public abstract Rtoken Run(List<Rtoken> args, Rtable ctx);
     

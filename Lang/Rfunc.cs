@@ -106,7 +106,9 @@ namespace RML.Lang {
                 x += 2;
             }
 
-            
+            foreach (var item in localList) {
+                fCtx.PutNow(item.GetWord().key, new Rtoken(Rtype.None, 0));
+            }
 
             return new Rsolver(code).Eval(fCtx);
         }

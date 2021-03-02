@@ -137,6 +137,10 @@ namespace RML.Lang {
                         sb.Remove(sb.Length - 1, 1);
                     }
                     return sb.ToString();
+                case Rtype.Prop:
+                    return '/' + GetStr();
+                case Rtype.GetWord:
+                    return ":" + GetStr();
                 case Rtype.LitWord:
                     return "'" + GetStr();
                 case Rtype.SetWord:
@@ -213,6 +217,10 @@ namespace RML.Lang {
             }
             Rtoken errTk = new Rtoken(Rtype.Err, "Error: illegal path! of " + ToStr());
             Rtoken currTk = null;
+
+            Rtable currCtx = ctx;
+            List<Rtoken> funcList = new List<Rtoken>();
+
             int i = 0;
             do {
                 Rtoken index = list[i];
@@ -252,6 +260,7 @@ namespace RML.Lang {
                         break;
 
                     case Rtype.Object:
+                        currCtx = currTk.GetTable();
                         switch (index.tp) {
                             case Rtype.SetWord:
                                 currTk = new Rtoken(Rtype.SetPath, new List<Rtoken>(){currTk, index});
@@ -268,6 +277,19 @@ namespace RML.Lang {
                         }
                         break;
 
+                    case Rtype.Func:
+                        if(funcList.Count == 0) {
+                            funcList.Add(currTk);
+                            funcList.Add(new Rtoken(Rtype.Object, currCtx));
+                        }
+
+                        if (index.tp.Equals(Rtype.Word)) {
+                            funcList.Add(new Rtoken(Rtype.Prop, index.GetWord().key));
+                            break;
+                        } else {
+                            return errTk;
+                        }
+
                     default:
                         return errTk;
                 }
@@ -276,6 +298,14 @@ namespace RML.Lang {
 
                 i++;
             } while (i < list.Count);
+
+            if (currTk.tp.Equals(Rtype.Func)) {
+                if (funcList.Count == 0) {
+                    funcList.Add(currTk);
+                    funcList.Add(new Rtoken(Rtype.Object, currCtx));
+                }
+                return new Rtoken(Rtype.Prop, funcList);
+            }
 
             return currTk;
 

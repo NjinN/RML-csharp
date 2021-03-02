@@ -19,6 +19,8 @@ namespace RML.Lang {
         Flow,
         Word,
         Path,
+        Prop,
+        GetWord,
         LitWord,
         SetWord,
         SetPath,

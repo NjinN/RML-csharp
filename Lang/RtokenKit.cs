@@ -45,6 +45,14 @@ namespace RML.Lang {
                 return new Rtoken(Rtype.Str, str.Substring(1, str.Length - 2));
             }
 
+            if (str.StartsWith('/')) {
+                return new Rtoken(Rtype.Prop, str.Substring(1, str.Length - 1));
+            }
+
+            if (str.StartsWith(':')) {
+                return new Rtoken(Rtype.GetWord, str.Substring(1, str.Length - 1));
+            }
+
             if (str.StartsWith('\'')) {
                 return new Rtoken(Rtype.LitWord, str.Substring(1, str.Length - 1));
             }
@@ -132,6 +140,10 @@ namespace RML.Lang {
                     return "word!";
                 case Rtype.Path:
                     return "path!";
+                case Rtype.Prop:
+                    return "prop!";
+                case Rtype.GetWord:
+                    return "get-word!";
                 case Rtype.LitWord:
                     return "lit-word!";
                 case Rtype.SetWord:
@@ -184,6 +196,10 @@ namespace RML.Lang {
                     return Rtype.Word;
                 case "path!":
                     return Rtype.Path;
+                case "prop!":
+                    return Rtype.Prop;
+                case "get-word!":
+                    return Rtype.GetWord;
                 case "lit-word!":
                     return Rtype.LitWord;
                 case "set-word!":

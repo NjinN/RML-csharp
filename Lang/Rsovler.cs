@@ -162,10 +162,29 @@ namespace RML.Lang {
                     List<Rtoken> fArgs = new List<Rtoken>();
                     EvalN(fArgs, ctx, f.argsLen, null);
                     if(fArgs.Count < f.argsLen) {
-                        return new Rtoken(Rtype.Err, "Error: Incomplete expression!!!");
+                        ansTk = new Rtoken(Rtype.Err, "Error: Incomplete expression!!!");
+                        return ansTk;
                     }
                     ansTk = f.Run(fArgs, ctx);
                     if(ansTk.tp.Equals(Rtype.Flow) && ansTk.GetFlow().name.Equals("return")) {
+                        ansTk = ansTk.GetFlow().val;
+                    }
+                    return ansTk;
+
+                case Rtype.Prop:
+                    List<Rtoken> fwpList = currTk.GetList();
+                    Rfunc fwp = fwpList[0].GetFunc();
+                    Rtable fwpCtx = fwpList[1].GetTable();
+                    List<Rtoken> pList = new List<Rtoken>(fwpList.ToArray()[2..]);
+                    List<bool> fwpQuoteList = fwp.GetQuoteListWithProps(pList);
+                    List<Rtoken> fwpArgs = new List<Rtoken>();
+                    EvalN(fwpArgs, ctx, fwpQuoteList.Count, fwpQuoteList);
+                    if (fwpArgs.Count < fwpQuoteList.Count) {
+                        ansTk = new Rtoken(Rtype.Err, "Error: Incomplete expression!!!");
+                        return ansTk;
+                    }
+                    ansTk = fwp.RunWithProps(fwpArgs, fwpCtx, pList);
+                    if (ansTk.tp.Equals(Rtype.Flow) && ansTk.GetFlow().name.Equals("return")) {
                         ansTk = ansTk.GetFlow().val;
                     }
                     return ansTk;
@@ -191,6 +210,10 @@ namespace RML.Lang {
                         return ansTk;
                     }
                     ansTk = new Rtoken(Rtype.Flow, new Rflow("opAns", op.Run(oArgs, ctx)));
+                    return ansTk;
+
+                case Rtype.GetWord:
+                    ansTk = new Rtoken(Rtype.Word, new Rword(currTk.GetStr(), ctx)).GetVal(ctx);
                     return ansTk;
 
                 default:

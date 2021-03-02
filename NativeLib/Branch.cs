@@ -11,28 +11,12 @@ namespace RML.NativeLib {
         }
 
         public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
-            Rtype type0 = args[0].tp;
-            Rtype type1 = args[1].tp;
-
-            if (type0.Equals(Rtype.Bool)) {
-                if (type1.Equals(Rtype.Block)) {
-                    if (args[0].GetBool()) {
-                        return new Rsolver(args[1].GetList()).Eval(ctx);
-                    } else {
-                        return new Rtoken(Rtype.Flow, new Rflow("pass"));
-                    }
-
-                }else if (type1.Equals(Rtype.Str)) {
-                    if (args[0].GetBool()) {
-                        return new Rsolver(args[1].GetStr()).Eval(ctx);
-                    } else {
-                        return new Rtoken(Rtype.Flow, new Rflow("pass"));
-                    }
-                }
-            }
-
-
-            return ErrorInfo(args);
+            return (args[0].ToBool(), args[1].tp) switch {
+                (true, Rtype.Block) => new Rsolver(args[1].GetList()).Eval(ctx),
+                (true, Rtype.Str) => new Rsolver(args[1].GetStr()).Eval(ctx),
+                (false, _) => new Rtoken(Rtype.Flow, new Rflow("pass")),
+                (_, _) => ErrorInfo(args)
+            };
         }
     }
 
@@ -43,36 +27,17 @@ namespace RML.NativeLib {
         }
 
         public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
-            Rtype type0 = args[0].tp;
-            Rtype type1 = args[1].tp;
-            Rtype type2 = args[2].tp;
+            return args[0].tp switch {
+                Rtype.Flow => (args[0].GetFlow().name, args[1].ToBool(), args[2].tp) switch {
+                    ("pass", true, Rtype.Block) => new Rsolver(args[2].GetList()).Eval(ctx),
+                    ("pass", true, Rtype.Str) => new Rsolver(args[2].GetStr()).Eval(ctx),
+                    ("pass", false, _) => new Rtoken(Rtype.Flow, new Rflow("pass")),
+                    (_, _, _) => ErrorInfo(args)
+                },
 
-            if (type0.Equals(Rtype.Flow)) {
+                _ => ErrorInfo(args)
+            };
 
-            } else {
-                return new Rtoken();
-            }
-
-
-            if (type1.Equals(Rtype.Bool)) {
-                if (type2.Equals(Rtype.Block)) {
-                    if (args[1].GetBool()) {
-                        return new Rsolver(args[2].GetList()).Eval(ctx);
-                    } else {
-                        return new Rtoken(Rtype.Flow, new Rflow("pass"));
-                    }
-
-                } else if (type2.Equals(Rtype.Str)) {
-                    if (args[1].GetBool()) {
-                        return new Rsolver(args[2].GetStr()).Eval(ctx);
-                    } else {
-                        return new Rtoken(Rtype.Flow, new Rflow("pass"));
-                    }
-                }
-            }
-
-
-            return ErrorInfo(args);
         }
     }
 
@@ -84,24 +49,15 @@ namespace RML.NativeLib {
         }
 
         public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
-            Rtype type0 = args[0].tp;
-            Rtype type1 = args[1].tp;
+            return args[0].tp switch {
+                Rtype.Flow => (args[0].GetFlow().name, args[1].tp) switch {
+                    ("pass", Rtype.Block) => new Rsolver(args[1].GetList()).Eval(ctx),
+                    ("pass", Rtype.Str) => new Rsolver(args[1].GetStr()).Eval(ctx),
+                    (_, _) => ErrorInfo(args)
+                },
+                _ => ErrorInfo(args)
+            };
 
-
-            if (type0.Equals(Rtype.Flow)) {
-                if (args[0].GetFlow().name.Equals("pass")) {
-                    if (type1.Equals(Rtype.Block)) {
-                        return new Rsolver(args[1].GetList()).Eval(ctx);
-                    } else if (type1.Equals(Rtype.Str)) {
-                        return new Rsolver(args[1].GetStr()).Eval(ctx);
-                    }
-                }
-
-            } else {
-                return new Rtoken();
-            }
-
-            return ErrorInfo(args);
         }
     }
 
@@ -113,29 +69,14 @@ namespace RML.NativeLib {
         }
 
         public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
-            Rtype type0 = args[0].tp;
-            Rtype type1 = args[1].tp;
-            Rtype type2 = args[2].tp;
+            return (args[0].ToBool(), args[1].tp, args[2].tp) switch {
+                (true, Rtype.Block, _) => new Rsolver(args[1].GetList()).Eval(ctx),
+                (true, Rtype.Str, _) => new Rsolver(args[1].GetStr()).Eval(ctx),
+                (false, _, Rtype.Block) => new Rsolver(args[2].GetList()).Eval(ctx),
+                (false, _, Rtype.Str) => new Rsolver(args[2].GetStr()).Eval(ctx),
+                (_, _, _) => ErrorInfo(args)
+            };
 
-            if (type0.Equals(Rtype.Bool)) {
-                if (type1.Equals(Rtype.Block) && type2.Equals(Rtype.Block)) {
-                    if (args[0].GetBool()) {
-                        return new Rsolver(args[1].GetList()).Eval(ctx);
-                    } else {
-                        return new Rsolver(args[2].GetList()).Eval(ctx);
-                    }
-
-                } else if (type1.Equals(Rtype.Str) && type2.Equals(Rtype.Block)) {
-                    if (args[0].GetBool()) {
-                        return new Rsolver(args[1].GetStr()).Eval(ctx);
-                    } else {
-                        return new Rsolver(args[2].GetStr()).Eval(ctx);
-                    }
-                }
-            }
-
-
-            return ErrorInfo(args);
         }
     }
 

@@ -11,25 +11,14 @@ namespace RML.NativeLib {
         }
 
         public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
-            Rtype ltype = args[0].tp;
-            Rtype rtype = args[1].tp;
+            return (args[0].tp, args[1].tp) switch {
+                (Rtype.Int, Rtype.Int) => EqIntInt(args),
+                (Rtype.Int, Rtype.Float) => EqIntFloat(args),
+                (Rtype.Float, Rtype.Int) => EqFloatInt(args),
+                (Rtype.Float, Rtype.Float) => EqFloatFloat(args),
+                (_, _) => ErrorInfo(args)
+            };
 
-            if (ltype.Equals(Rtype.Int)) {
-                if (rtype.Equals(Rtype.Int)) {
-                    return EqIntInt(args);
-                } else if (rtype.Equals(Rtype.Float)) {
-                    return EqIntFloat(args);
-                }
-
-            } else if (ltype.Equals(Rtype.Float)) {
-                if (rtype.Equals(Rtype.Int)) {
-                    return EqFloatInt(args);
-                } else if (rtype.Equals(Rtype.Float)) {
-                    return EqFloatFloat(args);
-                }
-            }
-
-            return ErrorInfo(args);
         }
 
         public Rtoken EqIntInt(List<Rtoken> args) {
@@ -69,25 +58,13 @@ namespace RML.NativeLib {
         }
 
         public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
-            Rtype ltype = args[0].tp;
-            Rtype rtype = args[1].tp;
-
-            if (ltype.Equals(Rtype.Int)) {
-                if (rtype.Equals(Rtype.Int)) {
-                    return LtIntInt(args);
-                } else if (rtype.Equals(Rtype.Float)) {
-                    return LtIntFloat(args);
-                }
-
-            } else if (ltype.Equals(Rtype.Float)) {
-                if (rtype.Equals(Rtype.Int)) {
-                    return LtFloatInt(args);
-                } else if (rtype.Equals(Rtype.Float)) {
-                    return LtFloatFloat(args);
-                }
-            }
-
-            return ErrorInfo(args);
+            return (args[0].tp, args[1].tp) switch {
+                (Rtype.Int, Rtype.Int) => LtIntInt(args),
+                (Rtype.Int, Rtype.Float) => LtIntFloat(args),
+                (Rtype.Float, Rtype.Int) => LtFloatInt(args),
+                (Rtype.Float, Rtype.Float) => LtFloatFloat(args),
+                (_, _) => ErrorInfo(args)
+            };
         }
 
         public Rtoken LtIntInt(List<Rtoken> args) {
@@ -125,25 +102,13 @@ namespace RML.NativeLib {
         }
 
         public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
-            Rtype ltype = args[0].tp;
-            Rtype rtype = args[1].tp;
-
-            if (ltype.Equals(Rtype.Int)) {
-                if (rtype.Equals(Rtype.Int)) {
-                    return GtIntInt(args);
-                } else if (rtype.Equals(Rtype.Float)) {
-                    return GtIntFloat(args);
-                }
-
-            } else if (ltype.Equals(Rtype.Float)) {
-                if (rtype.Equals(Rtype.Int)) {
-                    return GtFloatInt(args);
-                } else if (rtype.Equals(Rtype.Float)) {
-                    return GtFloatFloat(args);
-                }
-            }
-
-            return ErrorInfo(args);
+            return (args[0].tp, args[1].tp) switch {
+                (Rtype.Int, Rtype.Int) => GtIntInt(args),
+                (Rtype.Int, Rtype.Float) => GtIntFloat(args),
+                (Rtype.Float, Rtype.Int) => GtFloatInt(args),
+                (Rtype.Float, Rtype.Float) => GtFloatFloat(args),
+                (_, _) => ErrorInfo(args)
+            };
         }
 
         public Rtoken GtIntInt(List<Rtoken> args) {
@@ -183,25 +148,13 @@ namespace RML.NativeLib {
         }
 
         public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
-            Rtype ltype = args[0].tp;
-            Rtype rtype = args[1].tp;
-
-            if (ltype.Equals(Rtype.Int)) {
-                if (rtype.Equals(Rtype.Int)) {
-                    return LeIntInt(args);
-                } else if (rtype.Equals(Rtype.Float)) {
-                    return LeIntFloat(args);
-                }
-
-            } else if (ltype.Equals(Rtype.Float)) {
-                if (rtype.Equals(Rtype.Int)) {
-                    return LeFloatInt(args);
-                } else if (rtype.Equals(Rtype.Float)) {
-                    return LeFloatFloat(args);
-                }
-            }
-
-            return ErrorInfo(args);
+            return (args[0].tp, args[1].tp) switch {
+                (Rtype.Int, Rtype.Int) => LeIntInt(args),
+                (Rtype.Int, Rtype.Float) => LeIntFloat(args),
+                (Rtype.Float, Rtype.Int) => LeFloatInt(args),
+                (Rtype.Float, Rtype.Float) => LeFloatFloat(args),
+                (_, _) => ErrorInfo(args)
+            };
         }
 
         public Rtoken LeIntInt(List<Rtoken> args) {
@@ -241,25 +194,13 @@ namespace RML.NativeLib {
         }
 
         public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
-            Rtype ltype = args[0].tp;
-            Rtype rtype = args[1].tp;
-
-            if (ltype.Equals(Rtype.Int)) {
-                if (rtype.Equals(Rtype.Int)) {
-                    return GeIntInt(args);
-                } else if (rtype.Equals(Rtype.Float)) {
-                    return GeIntFloat(args);
-                }
-
-            } else if (ltype.Equals(Rtype.Float)) {
-                if (rtype.Equals(Rtype.Int)) {
-                    return GeFloatInt(args);
-                } else if (rtype.Equals(Rtype.Float)) {
-                    return GeFloatFloat(args);
-                }
-            }
-
-            return ErrorInfo(args);
+            return (args[0].tp, args[1].tp) switch {
+                (Rtype.Int, Rtype.Int) => GeIntInt(args),
+                (Rtype.Int, Rtype.Float) => GeIntFloat(args),
+                (Rtype.Float, Rtype.Int) => GeFloatInt(args),
+                (Rtype.Float, Rtype.Float) => GeFloatFloat(args),
+                (_, _) => ErrorInfo(args)
+            };
         }
 
         public Rtoken GeIntInt(List<Rtoken> args) {

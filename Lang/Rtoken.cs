@@ -349,6 +349,43 @@ namespace RML.Lang {
         }
 
 
+        public bool ToBool() {
+            switch (tp) {
+                case Rtype.Nil:
+                    return false;
+                case Rtype.None:
+                    return false;
+                case Rtype.Bool:
+                    return (bool)val;
+                case Rtype.Byte:
+                    return (byte)val > 0;
+                case Rtype.Char:
+                    return (char)val > 0;
+                case Rtype.Int:
+                    return (int)val > 0;
+                case Rtype.Float:
+                    return (float)val > 0;
+                case Rtype.Str:
+                case Rtype.Word:
+                case Rtype.LitWord:
+                case Rtype.SetWord:
+                    return !((string)val).Equals("");
+                case Rtype.Block:
+                case Rtype.Paren:
+                case Rtype.Path:
+                case Rtype.SetPath:
+                    return ((List<Rtoken>)val).Count > 0;
+
+
+                case Rtype.Undefined:
+                    return false;
+
+                default:
+                    return true;
+            }
+        }
+
+
 
     }
 

@@ -29,6 +29,10 @@ namespace RML.Lang {
                 return new Rtoken(Rtype.Bool, true);
             }
 
+            if (str.Equals("/") || str.Equals("/=")) {
+                return new Rtoken(Rtype.Word, new Rword(str, ctx));
+            }
+
             if (str.Length ==4 && str.StartsWith("#'") && str.EndsWith("'")) {
                 return new Rtoken(Rtype.Char, str.ToCharArray()[2]);
             }

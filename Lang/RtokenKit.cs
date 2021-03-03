@@ -29,7 +29,7 @@ namespace RML.Lang {
                 return new Rtoken(Rtype.Bool, true);
             }
 
-            if (str.Equals("/") || str.Equals("/=")) {
+            if (str.Equals("/") || str.Equals("/=") || str.Equals("%")) {
                 return new Rtoken(Rtype.Word, new Rword(str, ctx));
             }
 
@@ -51,6 +51,10 @@ namespace RML.Lang {
 
             if (str.StartsWith('/')) {
                 return new Rtoken(Rtype.Prop, str.Substring(1, str.Length - 1));
+            }
+
+            if (str.StartsWith('%')) {
+                return new Rtoken(Rtype.File, str.Substring(1, str.Length - 1));
             }
 
             if (str.StartsWith(':')) {
@@ -132,6 +136,8 @@ namespace RML.Lang {
                     return "float!";
                 case Rtype.Str:
                     return "str!";
+                case Rtype.File:
+                    return "file!";
                 case Rtype.Block:
                     return "block!";
                 case Rtype.Paren:
@@ -188,6 +194,8 @@ namespace RML.Lang {
                     return Rtype.Float;
                 case "str!":
                     return Rtype.Str;
+                case "file!":
+                    return Rtype.File;
                 case "block!":
                     return Rtype.Block;
                 case "paren!":

@@ -89,6 +89,8 @@ namespace RML.Lang {
                     return GetFloat().ToString();
                 case Rtype.Str:
                     return '"' + GetStr() + '"';
+                case Rtype.File:
+                    return '%' + GetStr();
                 case Rtype.Block: { }
                     sb.Append('[');
                     foreach(Rtoken item in GetList()) {
@@ -175,6 +177,10 @@ namespace RML.Lang {
             } else {
                 Console.WriteLine(ToStr());
             }
+        }
+
+        public void Show() {
+            Console.WriteLine(ToStr());
         }
 
 

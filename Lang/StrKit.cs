@@ -12,12 +12,14 @@ namespace RML.Lang {
                 if (!char.IsWhiteSpace(cs[idx])) {
                     if (cs[idx].Equals('"')) {
                         result.Add(TakeStr(cs, ref idx));
-                    }else if(cs[idx].Equals('[')) {
+                    } else if (cs[idx].Equals('[')) {
                         result.Add(TakeBlock(cs, ref idx));
-                    }else if (cs[idx].Equals('(')) {
+                    } else if (cs[idx].Equals('(')) {
                         result.Add(TakeParen(cs, ref idx));
-                    }else if (cs[idx].Equals('{')) {
+                    } else if (cs[idx].Equals('{')) {
                         result.Add(TakeObject(cs, ref idx));
+                    }else if(cs[idx].Equals('%')){
+                        result.Add(TakeFile(cs, ref idx));
                     } else {
                         result.Add(TakeWord(cs, ref idx));
                     }
@@ -152,6 +154,21 @@ namespace RML.Lang {
             } while (idx < cs.Length && cs[idx].Equals('/'));
 
             return result;
+        }
+
+
+        public static string TakeFile(char[] cs, ref int idx) {
+            int start = idx;
+            while(idx < cs.Length) {
+                if (cs[idx].Equals('"')) {
+                    TakeStr(cs, ref idx);
+                    continue;
+                }else if (char.IsWhiteSpace(cs[idx])) {
+                    break;
+                }
+                idx++;
+            }
+            return new string(cs[start..idx]);
         }
 
 

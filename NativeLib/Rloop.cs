@@ -116,7 +116,6 @@ namespace RML.NativeLib {
                             }
                         }
 
-                        cond = rCtx.GetNow(args[0].GetWord().key);
                         if (cond.tp.Equals(Rtype.Int)) {
                             cond.val = (int)cond.val + 1;
                         } else {
@@ -140,7 +139,6 @@ namespace RML.NativeLib {
                             }
                         }
 
-                        cond = rCtx.GetNow(args[0].GetWord().key);
                         if (cond.tp.Equals(Rtype.Int)) {
                             cond.val = (int)cond.val + 1;
                         } else {

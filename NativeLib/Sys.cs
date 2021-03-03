@@ -6,13 +6,15 @@ using RML.Lang;
 namespace RML.NativeLib {
     class Rquit : Rnative {
         public Rquit() {
-            name = "quit";
-            argsLen = 0;
+            name = "_quit";
+            argsLen = 1;
         }
 
         public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
-            Environment.Exit(0);
-            return new Rtoken();
+            if (args[0].tp.Equals(Rtype.Int)){
+                Environment.Exit(args[0].GetInt());
+            }
+            return ErrorInfo(args);
         }
     }
 
@@ -25,6 +27,19 @@ namespace RML.NativeLib {
 
         public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
             args[0].Echo();
+            return new Rtoken();
+        }
+    }
+
+
+    class Rclear : Rnative {
+        public Rclear() {
+            name = "clear";
+            argsLen = 0;
+        }
+
+        public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
+            Console.Clear();
             return new Rtoken();
         }
     }

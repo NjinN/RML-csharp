@@ -204,7 +204,7 @@ namespace RML.Lang {
                     Rnative op = currTk.GetNative();
                     List<Rtoken> oArgs = new List<Rtoken>();
                     oArgs.Add(ansTk);
-                    EvalN(oArgs, ctx, op.argsLen, null);
+                    EvalN(oArgs, ctx, op.argsLen, op.quoteList);
                     if(oArgs.Count < op.argsLen) {
                         ansTk = new Rtoken(Rtype.Err, "Error: Incomplete expression!!!");
                         return ansTk;

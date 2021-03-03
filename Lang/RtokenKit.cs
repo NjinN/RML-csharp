@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace RML.Lang {
@@ -124,6 +125,8 @@ namespace RML.Lang {
                     return "none!";
                 case Rtype.Err:
                     return "err!";
+                case Rtype.Datatype:
+                    return "datatype!";
                 case Rtype.Bool:
                     return "bool!";
                 case Rtype.Byte:
@@ -182,6 +185,8 @@ namespace RML.Lang {
                     return Rtype.None;
                 case "err!":
                     return Rtype.Err;
+                case "datatype!":
+                    return Rtype.Datatype;
                 case "bool!":
                     return Rtype.Bool;
                 case "byte!":
@@ -249,9 +254,50 @@ namespace RML.Lang {
             }
         }
 
+
+        public static List<Rtoken> CopyList(List<Rtoken> source) {
+            List<Rtoken> result = new List<Rtoken>();
+            foreach(var item in source) {
+                result.Add(item.Copy());
+            }
+            return result;
+        }
+
+
     }
 
 
 
+
+    class LangUtil {
+        public static T DeepCopy<T>(T obj) {
+            //如果是字符串或值类型则直接返回
+            if (obj is string || obj.GetType().IsValueType) return obj;
+
+            object retval = Activator.CreateInstance(obj.GetType());
+            FieldInfo[] fields = obj.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+            foreach (FieldInfo field in fields) {
+                try { field.SetValue(retval, DeepCopy(field.GetValue(obj))); } catch { }
+            }
+            return (T)retval;
+        }
+
+
+        public static List<T> DeepCopyList<T>(List<T> list) {
+            List<T> result = new List<T>();
+            foreach (var obj in list) {
+                //如果是字符串或值类型则直接返回
+                if (obj is string || obj.GetType().IsValueType) result.Add(obj);
+
+                object retval = Activator.CreateInstance(obj.GetType());
+                FieldInfo[] fields = obj.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+                foreach (FieldInfo field in fields) {
+                    try { field.SetValue(retval, DeepCopy(field.GetValue(obj))); } catch { }
+                }
+                result.Add((T)retval);
+            }
+            return result;
+        }
+    }
 
 }

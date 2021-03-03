@@ -12,11 +12,15 @@ namespace RML.Lang {
             val = 0;
         }
 
-        public Rtoken(Rtype t, dynamic v) {
+        public Rtoken(Rtype t, Object v) {
             tp = t;
             val = v;
         }
 
+
+        public Rtype GetRtype() {
+            return (Rtype)val;
+        }
 
         public bool GetBool() {
             return (bool)val;
@@ -77,6 +81,8 @@ namespace RML.Lang {
                     return "none";
                 case Rtype.Err:
                     return GetStr();
+                case Rtype.Datatype:
+                    return RtokenKit.Rtype2Str(GetRtype());
                 case Rtype.Bool:
                     return GetBool().ToString().ToLower();
                 case Rtype.Byte:
@@ -170,10 +176,18 @@ namespace RML.Lang {
             }
         }
 
-        public void Echo() {
+        public string OutputStr() {
             if (tp.Equals(Rtype.Str)) {
                 string str = ToStr();
-                Console.WriteLine(str.Substring(1, str.Length - 2));
+                return str.Substring(1, str.Length - 2);
+            } else {
+                return ToStr();
+            }
+        }
+
+        public void Echo() {
+            if (tp.Equals(Rtype.Str)) {
+                Console.WriteLine(OutputStr());
             } else {
                 Console.WriteLine(ToStr());
             }
@@ -336,11 +350,18 @@ namespace RML.Lang {
                         list.Add(item.Clone());
                     }
                     return new Rtoken(tp, list);
+                case Rtype.Object:
+                    return new Rtoken(Rtype.Object, GetTable().Copy());
 
                 default:
                     return Clone();
             }
         }
+
+        public Rtoken CopyDeep() {
+            return LangUtil.DeepCopy(this);
+        }
+
 
         public Rtoken PutList(int idx, Rtoken v) {
             if(idx <= 0) {

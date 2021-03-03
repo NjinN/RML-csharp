@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using RML.Lang;
 using RML.NativeLib;
 using RML.OpLib;
+using RML.ScriptLib;
 
 namespace RML
 {
@@ -30,16 +31,32 @@ namespace RML
 
             Rsolver mainSolver = new Rsolver();
 
+            mainSolver.InputStr(InitScript.script);
+            mainSolver.Eval(libCtx);
+
+            Random rd = new Random();
+
+            Console.WriteLine("如梦令 -- " + Ci.sentences[rd.Next(0, Ci.sentences.Length - 1)]);
+            Console.WriteLine("RML no-version;\tGratitude to Carl!");
+
+            String inpCode = "";
+
             while (true) {
                 Console.Write(">> ");
                 string inp = Console.ReadLine();
 
-                mainSolver.InputStr(inp);
+                if (inp.Trim().EndsWith('~')) {
+                    inpCode += inp.Trim().Substring(0, inp.Length-1);
+                    continue;
+                }
+
+                inpCode += inp;
+
+                mainSolver.InputStr(inpCode);
                 Rtoken result = mainSolver.Eval(usrCtx);
 
                 switch (result.tp) {
                     case Rtype.Nil:
-                        Console.WriteLine("");
                         break;
 
                     case Rtype.Flow:
@@ -55,6 +72,7 @@ namespace RML
                 }
 
                 Console.WriteLine("");
+                inpCode = "";
 
             }
 

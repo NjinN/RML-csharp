@@ -26,6 +26,8 @@ namespace RML.OpLib {
 
             ctx.PutNow("elif", new Rtoken(Rtype.Op, new Relif()));
             ctx.PutNow("else", new Rtoken(Rtype.Op, new Relse()));
+
+            ctx.PutNow("catch", new Rtoken(Rtype.Op, new Rcatch()));
         }
 
 

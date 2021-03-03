@@ -160,4 +160,100 @@ namespace RML.NativeLib {
     }
 
 
+
+    class Rfor : Rnative {
+        public Rfor() {
+            name = "for";
+            argsLen = 5;
+            quoteList = new List<bool> { true, false, false, false, false };
+        }
+
+        public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
+            return (args[0].tp, args[1].tp, args[2].tp, args[3].tp, args[4].tp) switch {
+                (Rtype.Word, Rtype.Int, Rtype.Int, Rtype.Int, Rtype.Block) => ForIntIntInt(args, ctx),
+                (Rtype.Word, Rtype.Float, Rtype.Float, Rtype.Float, Rtype.Block) => ForFloatFloatFloat(args, ctx),
+
+
+                _ => ErrorInfo(args)
+            };
+
+    
+        }
+
+
+        Rtoken ForIntIntInt(List<Rtoken> args, Rtable ctx) {
+            Rtable fctx = new Rtable(Rtable.Type.TMP, ctx);
+            string condKey = args[0].GetWord().key;
+            Rtoken cond = args[1].Copy();
+            fctx.PutNow(condKey, cond);
+            cond = fctx.GetNow(condKey);
+            List<Rtoken> code = RtokenKit.CopyList(args[4].GetList());
+
+            RtokenKit.ClearCtxForWordByWords(new List<Rtoken>() { args[0] }, code);
+
+            Rsolver fsolver = new Rsolver();
+
+            while(cond.tp.Equals(Rtype.Int) && cond.GetInt() <= args[2].GetInt()) {
+                fsolver.InputBlk(code);
+                Rtoken ans = fsolver.Eval(fctx);
+                
+                if (ans.tp.Equals(Rtype.Err)) {
+                    return ans;
+                }else if (ans.tp.Equals(Rtype.Flow)) {
+                    if (ans.GetFlow().name.Equals("return")) {
+                        return ans;
+                    }else if (ans.GetFlow().name.Equals("break")) {
+                        break;
+                    }
+                }
+
+                if (cond.tp.Equals(Rtype.Int)) {
+                    cond.val = cond.GetInt() + args[3].GetInt();
+                } else {
+                    break;
+                }
+            }
+
+            return new Rtoken();
+        }
+
+
+        Rtoken ForFloatFloatFloat(List<Rtoken> args, Rtable ctx) {
+            Rtable fctx = new Rtable(Rtable.Type.TMP, ctx);
+            string condKey = args[0].GetWord().key;
+            Rtoken cond = args[1].Copy();
+            fctx.PutNow(condKey, cond);
+            cond = fctx.GetNow(condKey);
+            List<Rtoken> code = RtokenKit.CopyList(args[4].GetList());
+
+            RtokenKit.ClearCtxForWordByWords(new List<Rtoken>() { args[0] }, code);
+
+            Rsolver fsolver = new Rsolver();
+
+            while (cond.tp.Equals(Rtype.Float) && cond.GetFloat() <= args[2].GetFloat()) {
+                fsolver.InputBlk(code);
+                Rtoken ans = fsolver.Eval(fctx);
+
+                if (ans.tp.Equals(Rtype.Err)) {
+                    return ans;
+                } else if (ans.tp.Equals(Rtype.Flow)) {
+                    if (ans.GetFlow().name.Equals("return")) {
+                        return ans;
+                    } else if (ans.GetFlow().name.Equals("break")) {
+                        break;
+                    }
+                }
+
+                if (cond.tp.Equals(Rtype.Float)) {
+                    cond.val = cond.GetFloat() + args[3].GetFloat();
+                } else {
+                    break;
+                }
+            }
+
+            return new Rtoken();
+        }
+
+    }
+
 }

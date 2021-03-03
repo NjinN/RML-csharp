@@ -68,6 +68,7 @@ namespace RML.Lang {
             while (idx < cs.Length) {
                 if (cs[idx].Equals('"')) {
                     TakeStr(cs, ref idx);
+                    continue;
                 } else if (cs[idx].Equals('[')) {
                     floor++;
                 } else if (cs[idx].Equals(']')) {
@@ -90,6 +91,7 @@ namespace RML.Lang {
             while (idx < cs.Length) {
                 if (cs[idx].Equals('"')) {
                     TakeStr(cs, ref idx);
+                    continue;
                 } else if (cs[idx].Equals('(')) {
                     floor++;
                 } else if (cs[idx].Equals(')')) {
@@ -113,6 +115,7 @@ namespace RML.Lang {
             while (idx < cs.Length) {
                 if (cs[idx].Equals('"')) {
                     TakeStr(cs, ref idx);
+                    continue;
                 } else if (cs[idx].Equals('{')) {
                     floor++;
                 } else if (cs[idx].Equals('}')) {

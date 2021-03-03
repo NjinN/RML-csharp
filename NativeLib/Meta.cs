@@ -54,4 +54,34 @@ namespace RML.NativeLib {
         }
     }
 
+    class RtypeOf : Rnative {
+        public RtypeOf() {
+            name = "type?";
+            argsLen = 1;
+        }
+
+        public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
+            return new Rtoken(Rtype.Datatype, args[0].tp);
+        }
+    }
+
+    class Rcopy : Rnative {
+        public Rcopy() {
+            name = "_copy";
+            argsLen = 2;
+        }
+
+        public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
+            if (args[1].tp.Equals(Rtype.Bool)) {
+                if (args[1].GetBool()) {
+                    return args[0].CopyDeep();
+                } else {
+                    return args[0].Copy();
+                }
+            }
+
+            return ErrorInfo(args);
+        }
+    }
+
 }

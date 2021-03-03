@@ -7,6 +7,7 @@ namespace RML.Lang {
         Nil,
         None,
         Err,
+        Datatype,
         Bool,
         Byte,
         Char,

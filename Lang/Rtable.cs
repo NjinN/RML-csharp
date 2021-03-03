@@ -93,5 +93,16 @@ namespace RML.Lang {
             tb.RemoveNow(k);
         }
 
+        public Rtable Copy() {
+            Rtable result = new Rtable();
+            result.tp = tp;
+            result.father = father;
+
+            foreach(var (k, v) in table) {
+                result.table.Add(k, v.Copy());
+            }
+
+            return result;
+        }
     }
 }

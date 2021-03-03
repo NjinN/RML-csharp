@@ -9,10 +9,13 @@ namespace RML.NativeLib {
             ctx.PutNow("do", new Rtoken(Rtype.Native, new Rdo()));
             ctx.PutNow("reduce", new Rtoken(Rtype.Native, new Rreduce()));
             ctx.PutNow("compose", new Rtoken(Rtype.Native, new Rcompose()));
+            ctx.PutNow("type?", new Rtoken(Rtype.Native, new RtypeOf()));
+            ctx.PutNow("_copy", new Rtoken(Rtype.Native, new Rcopy()));
 
-            ctx.PutNow("quit", new Rtoken(Rtype.Native, new Rquit()));
-            ctx.PutNow("q", new Rtoken(Rtype.Native, new Rquit()));
+
+            ctx.PutNow("_quit", new Rtoken(Rtype.Native, new Rquit()));
             ctx.PutNow("print", new Rtoken(Rtype.Native, new Rprint()));
+            ctx.PutNow("clear", new Rtoken(Rtype.Native, new Rclear()));
             ctx.PutNow("cost", new Rtoken(Rtype.Native, new Cost()));
 
             ctx.PutNow("add", new Rtoken(Rtype.Native, new Add()));
@@ -42,10 +45,18 @@ namespace RML.NativeLib {
             ctx.PutNow("continue", new Rtoken(Rtype.Native, new Rcontinue()));
             ctx.PutNow("loop", new Rtoken(Rtype.Native, new Rloop()));
             ctx.PutNow("repeat", new Rtoken(Rtype.Native, new Repeat()));
+            ctx.PutNow("for", new Rtoken(Rtype.Native, new Rfor()));
 
             ctx.PutNow("fork", new Rtoken(Rtype.Native, new Rfork()));
             ctx.PutNow("spawn", new Rtoken(Rtype.Native, new Rspawn()));
             ctx.PutNow("lock", new Rtoken(Rtype.Native, new Rlock()));
+
+            ctx.PutNow("to", new Rtoken(Rtype.Native, new Rto()));
+
+            ctx.PutNow("len?", new Rtoken(Rtype.Native, new Rlen()));
+
+            ctx.PutNow("attempt", new Rtoken(Rtype.Native, new Rattempt()));
+            ctx.PutNow("try", new Rtoken(Rtype.Native, new Rtry()));
 
         }
 

@@ -254,4 +254,75 @@ namespace RML.NativeLib {
 
     }
 
+
+
+    class Rwhile : Rnative {
+        public Rwhile() {
+            name = "while";
+            argsLen = 2;
+        }
+
+        public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
+            if(!args[0].tp.Equals(Rtype.Block) || !args[1].tp.Equals(Rtype.Block)) {
+                return ErrorInfo(args);
+            }
+
+            Rsolver solver = new Rsolver();
+            while (solver.InputBlk(args[0].GetList()).Eval(ctx).ToBool()) {
+                Rtoken ans = solver.InputBlk(args[1].GetList()).Eval(ctx);
+                if (ans.tp.Equals(Rtype.Err)) {
+                    return ans;
+                } else if (ans.tp.Equals(Rtype.Flow)) {
+                    if (ans.GetFlow().name.Equals("return")) {
+                        return ans;
+                    } else if (ans.GetFlow().name.Equals("break")) {
+                        break;
+                    }
+                }
+            }
+
+            return new Rtoken();
+        }
+    }
+
+
+
+    class Runtil : Rnative {
+        public Runtil() {
+            name = "until";
+            argsLen = 1;
+        }
+
+        public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
+            if (!args[0].tp.Equals(Rtype.Block) && !args[0].tp.Equals(Rtype.Str)) {
+                return ErrorInfo(args);
+            }
+
+            Rsolver solver = new Rsolver();
+            Rtoken ans = new Rtoken();
+            do {
+                if (args[0].tp.Equals(Rtype.Block)) {
+                    ans = solver.InputBlk(args[0].GetList()).Eval(ctx);
+                }else if (args[0].tp.Equals(Rtype.Str)) {
+                    ans = solver.InputStr(args[0].GetStr()).Eval(ctx);
+                }
+                
+                if (ans.tp.Equals(Rtype.Err)) {
+                    return ans;
+                } else if (ans.tp.Equals(Rtype.Flow)) {
+                    if (ans.GetFlow().name.Equals("return")) {
+                        return ans;
+                    } else if (ans.GetFlow().name.Equals("break")) {
+                        break;
+                    }
+                }
+            } while (!ans.ToBool());
+
+
+            return new Rtoken();
+        }
+    }
+
+
+
 }

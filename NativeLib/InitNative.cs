@@ -35,6 +35,7 @@ namespace RML.NativeLib {
             ctx.PutNow("le", new Rtoken(Rtype.Native, new Le()));
             ctx.PutNow("ge", new Rtoken(Rtype.Native, new Ge()));
 
+            ctx.PutNow("not", new Rtoken(Rtype.Native, new Rnot()));
             ctx.PutNow("if", new Rtoken(Rtype.Native, new Rif()));
             ctx.PutNow("either", new Rtoken(Rtype.Native, new Reither()));
 
@@ -46,9 +47,11 @@ namespace RML.NativeLib {
             ctx.PutNow("loop", new Rtoken(Rtype.Native, new Rloop()));
             ctx.PutNow("repeat", new Rtoken(Rtype.Native, new Repeat()));
             ctx.PutNow("for", new Rtoken(Rtype.Native, new Rfor()));
+            ctx.PutNow("while", new Rtoken(Rtype.Native, new Rwhile()));
+            ctx.PutNow("until", new Rtoken(Rtype.Native, new Runtil()));
 
             ctx.PutNow("fork", new Rtoken(Rtype.Native, new Rfork()));
-            ctx.PutNow("spawn", new Rtoken(Rtype.Native, new Rspawn()));
+            ctx.PutNow("_spawn", new Rtoken(Rtype.Native, new Rspawn()));
             ctx.PutNow("lock", new Rtoken(Rtype.Native, new Rlock()));
 
             ctx.PutNow("to", new Rtoken(Rtype.Native, new Rto()));

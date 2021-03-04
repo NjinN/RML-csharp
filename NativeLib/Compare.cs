@@ -16,6 +16,8 @@ namespace RML.NativeLib {
                 (Rtype.Int, Rtype.Float) => EqIntFloat(args),
                 (Rtype.Float, Rtype.Int) => EqFloatInt(args),
                 (Rtype.Float, Rtype.Float) => EqFloatFloat(args),
+                (Rtype.None, Rtype.None) => new Rtoken(Rtype.Bool, true),
+                (Rtype.Bool, Rtype.Bool) => new Rtoken(Rtype.Bool, args[0].GetBool() == args[1].GetBool()),
                 (_, _) => ErrorInfo(args)
             };
 

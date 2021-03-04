@@ -19,7 +19,10 @@ copy: func [source /deep] [
     _copy source deep
 ]
 
-
+spawn: func [blk /wait /timeout timeout] [
+    if timeout = none [timeout: 0]
+    _spawn blk wait timeout
+]
 
 
 

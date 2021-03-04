@@ -46,22 +46,24 @@ namespace RML.Lang {
             isLocal = false;
         }
 
-        public void InputStr(string s) {
+        public Rsolver InputStr(string s) {
             inpStrs = StrKit.CutStrs(s);
             inpBlk = null;
             inpLen = inpStrs.Count;
             idx = 0;
             model = Model.STR;
             ansTk = new Rtoken();
+            return this;
         }
 
-        public void InputBlk(List<Rtoken> blk) {
+        public Rsolver InputBlk(List<Rtoken> blk) {
             inpStrs = null;
             inpBlk = blk;
             inpLen = blk.Count;
             idx = 0;
             model = Model.BLK;
             ansTk = new Rtoken();
+            return this;
         }
 
 

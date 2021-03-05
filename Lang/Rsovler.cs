@@ -163,7 +163,10 @@ namespace RML.Lang {
                     Rfunc f = currTk.GetFunc();
                     List<Rtoken> fArgs = new List<Rtoken>();
                     EvalN(fArgs, ctx, f.argsLen, null);
-                    if(fArgs.Count < f.argsLen) {
+                    if (ansTk.tp.Equals(Rtype.Err)) {
+                        return ansTk;
+                    }
+                    if (fArgs.Count < f.argsLen) {
                         ansTk = new Rtoken(Rtype.Err, "Error: Incomplete expression!!!");
                         return ansTk;
                     }
@@ -181,6 +184,9 @@ namespace RML.Lang {
                     List<bool> fwpQuoteList = fwp.GetQuoteListWithProps(pList);
                     List<Rtoken> fwpArgs = new List<Rtoken>();
                     EvalN(fwpArgs, ctx, fwpQuoteList.Count, fwpQuoteList);
+                    if (ansTk.tp.Equals(Rtype.Err)) {
+                        return ansTk;
+                    }
                     if (fwpArgs.Count < fwpQuoteList.Count) {
                         ansTk = new Rtoken(Rtype.Err, "Error: Incomplete expression!!!");
                         return ansTk;
@@ -195,10 +201,13 @@ namespace RML.Lang {
                     Rnative nv = currTk.GetNative();
                     List<Rtoken> nArgs = new List<Rtoken>();
                     EvalN(nArgs, ctx, nv.argsLen, nv.quoteList);
-                    if(nArgs.Count < nv.argsLen) {
-                        ansTk = new Rtoken(Rtype.Err, "Error: Incomplete expression!!!");
+                    if (ansTk.tp.Equals(Rtype.Err)) {
                         return ansTk;
                     }
+                    if (nArgs.Count < nv.argsLen) {
+                        ansTk = new Rtoken(Rtype.Err, "Error: Incomplete expression!!!");
+                        return ansTk;
+                    } 
                     ansTk = nv.Run(nArgs, ctx);
                     return ansTk;
 
@@ -207,7 +216,10 @@ namespace RML.Lang {
                     List<Rtoken> oArgs = new List<Rtoken>();
                     oArgs.Add(ansTk);
                     EvalN(oArgs, ctx, op.argsLen, op.quoteList);
-                    if(oArgs.Count < op.argsLen) {
+                    if (ansTk.tp.Equals(Rtype.Err)) {
+                        return ansTk;
+                    }
+                    if (oArgs.Count < op.argsLen) {
                         ansTk = new Rtoken(Rtype.Err, "Error: Incomplete expression!!!");
                         return ansTk;
                     }
@@ -240,6 +252,10 @@ namespace RML.Lang {
                         args.RemoveAt(args.Count - 1);
                     }
                     ansTk = ansTk.GetFlow().val;
+                }
+                
+                if (ansTk.tp.Equals(Rtype.Err)) {
+                    return;
                 }
 
                 args.Add(ansTk);

@@ -42,7 +42,9 @@ namespace RML.NativeLib {
                     int idx = 0;
                     while(idx < args[0].GetInt()) {
                         Rtoken ans = new Rsolver(args[1].GetList()).Eval(ctx);
-                        if (ans.tp.Equals(Rtype.Flow)) {
+                        if (ans.tp.Equals(Rtype.Err)) {
+                            return ans;
+                        } else if (ans.tp.Equals(Rtype.Flow)) {
                             if (ans.GetFlow().name.Equals("break")) {
                                 break;
                             }else if (ans.GetFlow().name.Equals("continue")) {
@@ -62,7 +64,9 @@ namespace RML.NativeLib {
                     int idx = 0;
                     while (idx < args[0].GetInt()) {
                         Rtoken ans = new Rsolver(args[1].GetStr()).Eval(ctx);
-                        if (ans.tp.Equals(Rtype.Flow)) {
+                        if (ans.tp.Equals(Rtype.Err)) {
+                            return ans;
+                        } else if (ans.tp.Equals(Rtype.Flow)) {
                             if (ans.GetFlow().name.Equals("break")) {
                                 break;
                             } else if (ans.GetFlow().name.Equals("continue")) {
@@ -72,7 +76,7 @@ namespace RML.NativeLib {
                             } else {
                                 return ans;
                             }
-                        }
+                        } 
                         idx++;
                     }
 
@@ -108,7 +112,9 @@ namespace RML.NativeLib {
                     while(cond.tp.Equals(Rtype.Int) && cond.GetInt() <= args[1].GetInt()) {
                         Rtoken ans = new Rsolver(args[2].GetList()).Eval(rCtx);
 
-                        if (ans.tp.Equals(Rtype.Flow)) {
+                        if (ans.tp.Equals(Rtype.Err)) {
+                            return ans;
+                        } else if (ans.tp.Equals(Rtype.Flow)) {
                             if (ans.GetFlow().name.Equals("break")) {
                                 break;
                             } else if (ans.GetFlow().name.Equals("return")) {
@@ -131,7 +137,9 @@ namespace RML.NativeLib {
                     while (cond.tp.Equals(Rtype.Int) && cond.GetInt() <= args[1].GetInt()) {
                         Rtoken ans = new Rsolver(args[2].GetStr()).Eval(rCtx);
 
-                        if (ans.tp.Equals(Rtype.Flow)) {
+                        if (ans.tp.Equals(Rtype.Err)) {
+                            return ans;
+                        } else if (ans.tp.Equals(Rtype.Flow)) {
                             if (ans.GetFlow().name.Equals("break")) {
                                 break;
                             } else if (ans.GetFlow().name.Equals("return")) {

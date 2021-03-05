@@ -54,11 +54,17 @@ namespace RML.NativeLib {
         public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
             long start = DateTime.Now.ToUniversalTime().Ticks;
             if (args[0].tp.Equals(Rtype.Block)) {
-                new Rsolver(args[0].GetList()).Eval(ctx);
+                Rtoken ans = new Rsolver(args[0].GetList()).Eval(ctx);
+                if (ans.tp.Equals(Rtype.Err)) {
+                    return ans;
+                }
                 long end = DateTime.Now.ToUniversalTime().Ticks;
                 return new Rtoken(Rtype.Float, Convert.ToDecimal(end - start) / 10000000);
             } else if(args[0].tp.Equals(Rtype.Str)) {
-                new Rsolver(args[0].GetStr()).Eval(ctx);
+                Rtoken ans = new Rsolver(args[0].GetStr()).Eval(ctx);
+                if (ans.tp.Equals(Rtype.Err)) {
+                    return ans;
+                }
                 long end = DateTime.Now.ToUniversalTime().Ticks;
                 return new Rtoken(Rtype.Float, Convert.ToDecimal(end - start) / 10000000);
             } else {

@@ -6,6 +6,7 @@ using RML.NativeLib;
 
 namespace RML.Lang {
 
+    [Serializable]
     class RsetProc {
         public string name = "";
         public List<Rtoken> args = new List<Rtoken>();

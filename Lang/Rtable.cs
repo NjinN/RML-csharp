@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace RML.Lang {
+    [Serializable]
     class Rtable {
         public enum Type { SYS, USR, TMP};
 
@@ -38,7 +39,7 @@ namespace RML.Lang {
                 lock (this) {
                     Rtoken tk = table.GetValueOrDefault(k, null);
                     if(null == tk) {
-                        table.Add(k, v.Copy());
+                        table.Add(k, v);
                     } else {
                         tk.Copy(v);
                     }
@@ -47,7 +48,7 @@ namespace RML.Lang {
             } else {
                 Rtoken tk = table.GetValueOrDefault(k, null);
                 if (null == tk) {
-                    table.Add(k, v.Copy());
+                    table.Add(k, v);
                 } else {
                     tk.Copy(v);
                 }

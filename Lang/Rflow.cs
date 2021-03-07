@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace RML.Lang {
+    [Serializable]
     class Rflow {
         public string name;
         public Rtoken val;

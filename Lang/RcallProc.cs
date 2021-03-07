@@ -4,6 +4,7 @@ using System.Text;
 
 namespace RML.Lang {
 
+    [Serializable]
     class RcallProc {
         public string name = "";
         public List<Rtoken> args = new List<Rtoken>();

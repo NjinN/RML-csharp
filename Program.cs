@@ -62,12 +62,12 @@ namespace RML
                     case Rtype.Flow:
                         Rflow flow = result.GetFlow();
                         if(null != flow.val) {
-                            flow.val.Echo();
+                            flow.val.Show();
                         }
                         break;
 
                     default:
-                        result.Echo();
+                        result.Show();
                         break;
                 }
 

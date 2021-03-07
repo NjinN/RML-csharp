@@ -103,10 +103,10 @@ namespace RML.NativeLib {
         public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
             if (args[0].tp.Equals(Rtype.Word) && args[1].tp.Equals(Rtype.Int)) {
                 Rtable rCtx = new Rtable(Rtable.Type.TMP, ctx);
-                rCtx.PutNow(args[0].GetWord().key, new Rtoken(Rtype.Int, 1));
+                Rtoken cond = new Rtoken(Rtype.Int, 1);
+                rCtx.PutNow(args[0].GetWord().key, cond);
 
                 if (args[2].tp.Equals(Rtype.Block)) {
-                    Rtoken cond = rCtx.GetNow(args[0].GetWord().key);
                     RtokenKit.ClearCtxForWordByWords(new List<Rtoken>() { args[0] }, args[2].GetList());
 
                     while(cond.tp.Equals(Rtype.Int) && cond.GetInt() <= args[1].GetInt()) {
@@ -133,7 +133,6 @@ namespace RML.NativeLib {
                     return new Rtoken();
 
                 } else if (args[2].tp.Equals(Rtype.Str)) {
-                    Rtoken cond = rCtx.GetNow(args[0].GetWord().key);
                     while (cond.tp.Equals(Rtype.Int) && cond.GetInt() <= args[1].GetInt()) {
                         Rtoken ans = new Rsolver(args[2].GetStr()).Eval(rCtx);
 
@@ -192,7 +191,6 @@ namespace RML.NativeLib {
             string condKey = args[0].GetWord().key;
             Rtoken cond = args[1].Copy();
             fctx.PutNow(condKey, cond);
-            cond = fctx.GetNow(condKey);
             List<Rtoken> code = RtokenKit.CopyList(args[4].GetList());
 
             RtokenKit.ClearCtxForWordByWords(new List<Rtoken>() { args[0] }, code);
@@ -229,7 +227,6 @@ namespace RML.NativeLib {
             string condKey = args[0].GetWord().key;
             Rtoken cond = args[1].Copy();
             fctx.PutNow(condKey, cond);
-            cond = fctx.GetNow(condKey);
             List<Rtoken> code = RtokenKit.CopyList(args[4].GetList());
 
             RtokenKit.ClearCtxForWordByWords(new List<Rtoken>() { args[0] }, code);

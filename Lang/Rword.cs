@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace RML.Lang {
+
+    [Serializable]
     class Rword {
         public string key;
         public Rtable ctx;

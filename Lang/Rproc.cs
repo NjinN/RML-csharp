@@ -4,6 +4,7 @@ using System.Text;
 
 namespace RML.Lang {
 
+    [Serializable]
     class Rproc {
         public Dictionary<string, RprocEnity> typeMap;
         public Dictionary<int, RprocEnity> countMap;
@@ -33,6 +34,8 @@ namespace RML.Lang {
 
     }
 
+
+    [Serializable]
     class RprocEnity {
         public List<Rtoken> args;
         public List<Rtoken> code;

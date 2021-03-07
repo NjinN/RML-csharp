@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace RML.Lang {
+
+    [Serializable]
     class Rtoken {
         public Rtype    tp;
         public Object  val;
@@ -102,7 +104,7 @@ namespace RML.Lang {
                 case Rtype.Byte:
                     return GetByte().ToString();
                 case Rtype.Char:
-                    return GetChar().ToString();
+                    return "#'" + GetChar().ToString() + "'";
                 case Rtype.Int:
                     return GetInt().ToString();
                 case Rtype.Float:

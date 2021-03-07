@@ -5,7 +5,7 @@ using System.Text;
 namespace RML.Lang {
 
 
-
+    [Serializable]
     abstract class Rnative{
         public string name;
         public int argsLen;

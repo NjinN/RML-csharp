@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
-using System.Text;
+using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text.RegularExpressions;
+
 
 namespace RML.Lang {
     class RtokenKit {
@@ -69,6 +73,10 @@ namespace RML.Lang {
 
             if (str.StartsWith('\'')) {
                 return new Rtoken(Rtype.LitWord, str.Substring(1, str.Length - 1));
+            }
+
+            if (str.StartsWith("#'")) {
+                return new Rtoken(Rtype.Char, str.ToCharArray()[2]);
             }
 
             if (str.StartsWith('[')) {
@@ -307,33 +315,40 @@ namespace RML.Lang {
 
     class LangUtil {
         public static T DeepCopy<T>(T obj) {
-            //如果是字符串或值类型则直接返回
-            if (obj is string || obj.GetType().IsValueType) return obj;
-
-            object retval = Activator.CreateInstance(obj.GetType());
-            FieldInfo[] fields = obj.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-            foreach (FieldInfo field in fields) {
-                try { field.SetValue(retval, DeepCopy(field.GetValue(obj))); } catch { }
+            using (Stream objectStream = new MemoryStream()) {
+                //利用 System.Runtime.Serialization序列化与反序列化完成引用对象的复制
+                IFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(objectStream, obj);
+                objectStream.Seek(0, SeekOrigin.Begin);
+                return (T)formatter.Deserialize(objectStream);
             }
-            return (T)retval;
         }
 
 
         public static List<T> DeepCopyList<T>(List<T> list) {
             List<T> result = new List<T>();
-            foreach (var obj in list) {
-                //如果是字符串或值类型则直接返回
-                if (obj is string || obj.GetType().IsValueType) result.Add(obj);
-
-                object retval = Activator.CreateInstance(obj.GetType());
-                FieldInfo[] fields = obj.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-                foreach (FieldInfo field in fields) {
-                    try { field.SetValue(retval, DeepCopy(field.GetValue(obj))); } catch { }
+            foreach (T obj in list) {
+                using (Stream objectStream = new MemoryStream()) {
+                    //利用 System.Runtime.Serialization序列化与反序列化完成引用对象的复制
+                    IFormatter formatter = new BinaryFormatter();
+                    formatter.Serialize(objectStream, obj);
+                    objectStream.Seek(0, SeekOrigin.Begin);
+                    result.Add((T)formatter.Deserialize(objectStream));
                 }
-                result.Add((T)retval);
             }
             return result;
         }
+
+
+        public static string GetMemory(object o) // 获取引用类型的内存地址方法    
+        {
+            GCHandle h = GCHandle.Alloc(o, GCHandleType.WeakTrackResurrection);
+
+            IntPtr addr = GCHandle.ToIntPtr(h);
+
+            return "0x" + addr.ToString("X");
+        }
+
     }
 
 }

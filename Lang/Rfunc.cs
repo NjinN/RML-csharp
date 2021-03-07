@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace RML.Lang {
+    [Serializable]
     class Rfunc {
         public int argsLen;
         public List<Rtoken> args;

@@ -4,6 +4,7 @@ using System.Text;
 using RML.Lang;
 
 namespace RML.NativeLib {
+    [Serializable]
     class Add : Rnative {
         public Add() {
             name = "add";

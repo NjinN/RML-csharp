@@ -375,8 +375,8 @@ namespace RML.Lang {
                         list.Add(item.Clone());
                     }
                     return new Rtoken(tp, list);
-                case Rtype.Object:
-                    return new Rtoken(Rtype.Object, GetTable().Copy());
+                //case Rtype.Object:
+                    //return new Rtoken(Rtype.Object, GetTable().CopyDeep());
 
                 default:
                     return Clone();
@@ -384,6 +384,10 @@ namespace RML.Lang {
         }
 
         public Rtoken CopyDeep() {
+            if (tp.Equals(Rtype.Object)) {
+                return new Rtoken(Rtype.Object, GetTable().CopyDeep());
+            }
+
             return LangUtil.DeepCopy(this);
         }
 

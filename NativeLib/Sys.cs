@@ -4,6 +4,7 @@ using System.Text;
 using RML.Lang;
 
 namespace RML.NativeLib {
+    [Serializable]
     class Rquit : Rnative {
         public Rquit() {
             name = "_quit";
@@ -19,6 +20,7 @@ namespace RML.NativeLib {
     }
 
 
+    [Serializable]
     class Rprint : Rnative {
         public Rprint() {
             name = "print";
@@ -32,6 +34,8 @@ namespace RML.NativeLib {
     }
 
 
+
+    [Serializable]
     class Rclear : Rnative {
         public Rclear() {
             name = "clear";
@@ -45,6 +49,7 @@ namespace RML.NativeLib {
     }
 
 
+    [Serializable]
     class Cost : Rnative {
         public Cost() {
             name = "cost";

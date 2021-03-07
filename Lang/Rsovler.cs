@@ -134,7 +134,7 @@ namespace RML.Lang {
                     if(idx == inpLen) {
                         return new Rtoken(Rtype.Err, "Error: Incomplete expression!!!");
                     }
-                    Rtoken v = EvalOne(ctx, false).Copy();
+                    Rtoken v = EvalOne(ctx, false).Clone();
                     if (isLocal) {
                         ctx.PutNow(currTk.GetStr(), v);
                     } else {
@@ -147,7 +147,7 @@ namespace RML.Lang {
                     if (idx == inpLen) {
                         return new Rtoken(Rtype.Err, "Error: Incomplete expression!!!");
                     }
-                    Rtoken value = EvalOne(ctx, false).Copy();
+                    Rtoken value = EvalOne(ctx, false).Clone();
                     switch (list[0].tp) {
                         case Rtype.Block:
                             list[0].PutList(list[1].GetInt(), value);

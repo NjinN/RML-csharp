@@ -144,7 +144,9 @@ namespace RML.Lang {
                     return v;
                 case Rtype.SetPath:
                     List<Rtoken> list = currTk.GetList();
-
+                    if (idx == inpLen) {
+                        return new Rtoken(Rtype.Err, "Error: Incomplete expression!!!");
+                    }
                     Rtoken value = EvalOne(ctx, false);
                     switch (list[0].tp) {
                         case Rtype.Block:
@@ -228,6 +230,15 @@ namespace RML.Lang {
 
                 case Rtype.GetWord:
                     ansTk = new Rtoken(Rtype.Word, new Rword(currTk.GetStr(), ctx)).GetVal(ctx);
+                    return ansTk;
+
+                case Rtype.SetProc:
+                    Rtoken codeBlk = EvalOne(ctx, false);
+                    if (!codeBlk.tp.Equals(Rtype.Block)) {
+                        ansTk = new Rtoken(Rtype.Err, "Error: Must set proc! by block!");
+                        return ansTk;
+                    }
+                    ansTk = currTk.GetSetProc().Set(codeBlk, ctx);
                     return ansTk;
 
                 default:

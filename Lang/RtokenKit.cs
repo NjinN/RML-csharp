@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace RML.Lang {
     class RtokenKit {
@@ -46,6 +47,10 @@ namespace RML.Lang {
                 return new Rtoken(Rtype.Float, Convert.ToDecimal(str));
             }
 
+            if (str.EndsWith('!')) {
+                return new Rtoken(Rtype.Datatype, RtokenKit.Str2Rtype(str));
+            }
+
             if (str.StartsWith('"')) {
                 return new Rtoken(Rtype.Str, str.Substring(1, str.Length - 2));
             }
@@ -64,10 +69,6 @@ namespace RML.Lang {
 
             if (str.StartsWith('\'')) {
                 return new Rtoken(Rtype.LitWord, str.Substring(1, str.Length - 1));
-            }
-
-            if (str.EndsWith(':') && !str.Contains('/')) {
-                return new Rtoken(Rtype.SetWord, str.Substring(0, str.Length - 1));
             }
 
             if (str.StartsWith('[')) {
@@ -102,6 +103,25 @@ namespace RML.Lang {
                 
             }
 
+            if(Regex.IsMatch(str, "^.+\\(.*\\):$")) {
+                int i = str.IndexOf('(');
+                string name = str.Substring(0, i);
+                string argsStr = str.Substring(i + 1, str.Length - i - 3);
+                RsetProc setProc = new RsetProc(name, MakeRtokens(argsStr, ctx));
+                return new Rtoken(Rtype.SetProc, setProc);
+            }
+
+            if (Regex.IsMatch(str, "^.+\\(.*\\)$")) {
+                int i = str.IndexOf('(');
+                string name = str.Substring(0, i);
+                string argsStr = str.Substring(i + 1, str.Length - i - 2);
+                RcallProc callProc = new RcallProc(name, MakeRtokens(argsStr, ctx));
+                return new Rtoken(Rtype.CallProc, callProc);
+            }
+
+            if (str.EndsWith(':') && !str.Contains('/')) {
+                return new Rtoken(Rtype.SetWord, str.Substring(0, str.Length - 1));
+            }
 
             return new Rtoken(Rtype.Word, new Rword(s, ctx));
         }
@@ -155,6 +175,10 @@ namespace RML.Lang {
                     return "path!";
                 case Rtype.Prop:
                     return "prop!";
+                case Rtype.Proc:
+                    return "proc!";
+                case Rtype.CallProc:
+                    return "call-proc!";
                 case Rtype.GetWord:
                     return "get-word!";
                 case Rtype.LitWord:
@@ -163,6 +187,8 @@ namespace RML.Lang {
                     return "set-word!";
                 case Rtype.SetPath:
                     return "set-path!";
+                case Rtype.SetProc:
+                    return "set-proc!";
                 case Rtype.Func:
                     return "func!";
                 case Rtype.Native:
@@ -215,6 +241,10 @@ namespace RML.Lang {
                     return Rtype.Path;
                 case "prop!":
                     return Rtype.Prop;
+                case "proc!":
+                    return Rtype.Proc;
+                case "call-proc!":
+                    return Rtype.CallProc;
                 case "get-word!":
                     return Rtype.GetWord;
                 case "lit-word!":
@@ -223,6 +253,8 @@ namespace RML.Lang {
                     return Rtype.SetWord;
                 case "set-path!":
                     return Rtype.SetPath;
+                case "set-proc!":
+                    return Rtype.SetProc;
                 case "func!":
                     return Rtype.Func;
                 case "native!":
@@ -247,10 +279,14 @@ namespace RML.Lang {
                             }
                         }else if(itor.tp.Equals(Rtype.Block) || itor.tp.Equals(Rtype.Paren)) {
                             ClearCtxForWordByWords(words, itor.GetList());
+                        }else if (itor.tp.Equals(Rtype.CallProc)) {
+                            ClearCtxForWordByWords(words, itor.GetCallProc().args);
+                        } else if (itor.tp.Equals(Rtype.SetProc)) {
+                            ClearCtxForWordByWords(words, itor.GetSetProc().args);
                         }
+
                     }
                 }
-            
             }
         }
 

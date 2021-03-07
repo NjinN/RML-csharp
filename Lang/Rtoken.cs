@@ -71,6 +71,20 @@ namespace RML.Lang {
             return (Rfunc)val;
         }
 
+        public Rproc GetProc() {
+            return (Rproc)val;
+        }
+
+        public RsetProc GetSetProc() {
+            return (RsetProc)val;
+        }
+
+
+        public RcallProc GetCallProc() {
+            return (RcallProc)val;
+        }
+
+
 
         public string ToStr() {
             StringBuilder sb = new StringBuilder();
@@ -147,6 +161,10 @@ namespace RML.Lang {
                     return sb.ToString();
                 case Rtype.Prop:
                     return '/' + GetStr();
+                case Rtype.Proc:
+                    return "Proc";
+                case Rtype.CallProc:
+                    return "CallProc";
                 case Rtype.GetWord:
                     return ":" + GetStr();
                 case Rtype.LitWord:
@@ -162,6 +180,8 @@ namespace RML.Lang {
                         sb.Remove(sb.Length - 1, 1);
                     }
                     return sb.ToString();
+                case Rtype.SetProc:
+                    return "SetProc";
                 case Rtype.Func:
                     return "Function";
                 case Rtype.Native:
@@ -223,6 +243,9 @@ namespace RML.Lang {
                 case Rtype.Path:
                 case Rtype.SetPath:
                     return GetPathVal(ctx);
+
+                case Rtype.CallProc:
+                    return GetCallProc().Call(ctx);
 
                 default:
                     return this;

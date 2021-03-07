@@ -40,6 +40,12 @@ namespace RML.Lang {
                     idx = start;
                     TakePath(cs, ref idx);
                     return new string(cs[start..idx]);
+                }else if (cs[idx].Equals('(')) {
+                    TakeParen(cs, ref idx);
+                    if (idx < cs.Length && cs[idx].Equals(':')) {
+                        idx++;
+                    }
+                    break;
                 }
 
                 idx++;

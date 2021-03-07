@@ -4,6 +4,7 @@ using System.Text;
 using RML.Lang;
 
 namespace RML.NativeLib {
+    [Serializable]
     class Rattempt : Rnative {
         public Rattempt() {
             name = "attempt";
@@ -34,6 +35,7 @@ namespace RML.NativeLib {
     }
 
 
+    [Serializable]
     class Rtry : Rnative {
         public Rtry() {
             name = "try";
@@ -64,6 +66,7 @@ namespace RML.NativeLib {
     }
 
 
+    [Serializable]
     class Rcatch : Rnative {
         public Rcatch() {
             name = "catch";

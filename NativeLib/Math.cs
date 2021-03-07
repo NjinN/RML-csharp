@@ -55,6 +55,7 @@ namespace RML.NativeLib {
     }
 
 
+    [Serializable]
     class Sub : Rnative {
         public Sub() {
             name = "sub";
@@ -98,6 +99,7 @@ namespace RML.NativeLib {
     }
 
 
+    [Serializable]
     class Mul : Rnative {
         public Mul() {
             name = "mul";
@@ -145,7 +147,7 @@ namespace RML.NativeLib {
 
 
 
-
+    [Serializable]
     class Div : Rnative {
         public Div() {
             name = "div";
@@ -192,6 +194,7 @@ namespace RML.NativeLib {
 
 
 
+    [Serializable]
     class Mod : Rnative {
         public Mod() {
             name = "mod";
@@ -237,6 +240,8 @@ namespace RML.NativeLib {
     }
 
 
+
+    [Serializable]
     class AddSet : Rnative {
         public AddSet() {
             name = "add-set";
@@ -315,8 +320,7 @@ namespace RML.NativeLib {
 
 
 
-
-
+    [Serializable]
     class SubSet : Rnative {
         public SubSet() {
             name = "sub-set";
@@ -383,6 +387,7 @@ namespace RML.NativeLib {
 
 
 
+    [Serializable]
     class MulSet : Rnative {
         public MulSet() {
             name = "mul-set";
@@ -449,7 +454,7 @@ namespace RML.NativeLib {
 
 
 
-
+    [Serializable]
     class DivSet : Rnative {
         public DivSet() {
             name = "div-set";
@@ -519,6 +524,7 @@ namespace RML.NativeLib {
 
 
 
+    [Serializable]
     class ModSet : Rnative {
         public ModSet() {
             name = "mod-set";

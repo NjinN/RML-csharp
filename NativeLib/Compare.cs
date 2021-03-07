@@ -4,6 +4,7 @@ using System.Text;
 using RML.Lang;
 
 namespace RML.NativeLib {
+    [Serializable]
     class Eq : Rnative {
         public Eq() {
             name = "eq";
@@ -60,7 +61,7 @@ namespace RML.NativeLib {
 
 
 
-
+    [Serializable]
     class Lt : Rnative {
         public Lt() {
             name = "lt";
@@ -105,6 +106,7 @@ namespace RML.NativeLib {
 
 
 
+    [Serializable]
     class Gt : Rnative {
         public Gt() {
             name = "gt";
@@ -150,7 +152,7 @@ namespace RML.NativeLib {
 
 
 
-
+    [Serializable]
     class Le : Rnative {
         public Le() {
             name = "le";
@@ -196,7 +198,7 @@ namespace RML.NativeLib {
 
 
 
-
+    [Serializable]
     class Ge : Rnative {
         public Ge() {
             name = "ge";

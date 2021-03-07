@@ -5,7 +5,7 @@ using RML.Lang;
 
 namespace RML.NativeLib {
 
-
+    [Serializable]
     class Rif : Rnative {
         public Rif() {
             name = "if";
@@ -22,6 +22,8 @@ namespace RML.NativeLib {
         }
     }
 
+
+    [Serializable]
     class Relif : Rnative {
         public Relif() {
             name = "elif";
@@ -44,6 +46,7 @@ namespace RML.NativeLib {
     }
 
 
+    [Serializable]
     class Relse : Rnative {
         public Relse() {
             name = "else";
@@ -64,6 +67,7 @@ namespace RML.NativeLib {
     }
 
 
+    [Serializable]
     class Reither : Rnative {
         public Reither() {
             name = "either";

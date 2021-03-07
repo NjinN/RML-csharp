@@ -6,6 +6,7 @@ using RML.Lang;
 
 namespace RML.NativeLib {
 
+    [Serializable]
     class Rnot : Rnative {
         public Rnot() {
             name = "not";
@@ -18,6 +19,7 @@ namespace RML.NativeLib {
     }
 
 
+    [Serializable]
     class Rfork : Rnative {
         public Rfork() {
             name = "fork";
@@ -45,7 +47,7 @@ namespace RML.NativeLib {
     }
 
 
-
+    [Serializable]
     class Rspawn : Rnative {
         public Rspawn() {
             name = "_spawn";
@@ -92,6 +94,7 @@ namespace RML.NativeLib {
     }
 
 
+    [Serializable]
     class Rlock : Rnative {
         public Rlock() {
             name = "lock";

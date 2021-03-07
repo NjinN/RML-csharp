@@ -4,6 +4,8 @@ using System.Text;
 using RML.Lang;
 
 namespace RML.NativeLib {
+
+    [Serializable]
     class Rto : Rnative {
         public Rto() {
             name = "to";

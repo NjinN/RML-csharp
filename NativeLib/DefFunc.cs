@@ -4,6 +4,7 @@ using System.Text;
 using RML.Lang;
 
 namespace RML.NativeLib {
+    [Serializable]
     class Func : Rnative {
         public Func() {
             name = "func";
@@ -94,6 +95,7 @@ namespace RML.NativeLib {
 
 
 
+    [Serializable]
     class Rreturn : Rnative {
         public Rreturn() {
             name = "return";

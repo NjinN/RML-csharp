@@ -4,6 +4,7 @@ using System.Text;
 using RML.Lang;
 
 namespace RML.NativeLib {
+    [Serializable]
     class Rdo : Rnative {
         public Rdo() {
             name = "do";
@@ -21,6 +22,7 @@ namespace RML.NativeLib {
     }
 
 
+    [Serializable]
     class Rreduce : Rnative {
         public Rreduce() {
             name = "do";
@@ -40,6 +42,7 @@ namespace RML.NativeLib {
     }
 
 
+    [Serializable]
     class Rcompose : Rnative {
         public Rcompose() {
             name = "compose";
@@ -54,6 +57,8 @@ namespace RML.NativeLib {
         }
     }
 
+
+    [Serializable]
     class RtypeOf : Rnative {
         public RtypeOf() {
             name = "type?";
@@ -65,6 +70,8 @@ namespace RML.NativeLib {
         }
     }
 
+
+    [Serializable]
     class Rcopy : Rnative {
         public Rcopy() {
             name = "_copy";

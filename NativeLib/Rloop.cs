@@ -5,6 +5,7 @@ using System.Text;
 using RML.Lang;
 
 namespace RML.NativeLib {
+    [Serializable]
     class Rbreak : Rnative {
         public Rbreak() {
             name = "break";
@@ -17,6 +18,8 @@ namespace RML.NativeLib {
         }
     }
 
+
+    [Serializable]
     class Rcontinue : Rnative {
         public Rcontinue() {
             name = "continue";
@@ -30,6 +33,8 @@ namespace RML.NativeLib {
     }
 
 
+
+    [Serializable]
     class Rloop : Rnative {
         public Rloop() {
             name = "loop";
@@ -92,7 +97,7 @@ namespace RML.NativeLib {
 
 
 
-
+    [Serializable]
     class Repeat : Rnative {
         public Repeat() {
             name = "repeat";
@@ -166,6 +171,7 @@ namespace RML.NativeLib {
 
 
 
+    [Serializable]
     class Rfor : Rnative {
         public Rfor() {
             name = "for";
@@ -261,6 +267,7 @@ namespace RML.NativeLib {
 
 
 
+    [Serializable]
     class Rwhile : Rnative {
         public Rwhile() {
             name = "while";
@@ -292,6 +299,7 @@ namespace RML.NativeLib {
 
 
 
+    [Serializable]
     class Runtil : Rnative {
         public Runtil() {
             name = "until";

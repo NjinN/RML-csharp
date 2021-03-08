@@ -60,6 +60,10 @@ namespace RML.NativeLib {
             ctx.PutNow("_take", new Rtoken(Rtype.Native, new Rtake()));
             ctx.PutNow("_append", new Rtoken(Rtype.Native, new Rappend()));
             ctx.PutNow("_insert", new Rtoken(Rtype.Native, new Rinsert()));
+            ctx.PutNow("_at", new Rtoken(Rtype.Native, new Rat()));
+            ctx.PutNow("_index", new Rtoken(Rtype.Native, new Rindex()));
+            ctx.PutNow("_find", new Rtoken(Rtype.Native, new Rfind()));
+            ctx.PutNow("_replace", new Rtoken(Rtype.Native, new Rreplace()));
 
             ctx.PutNow("attempt", new Rtoken(Rtype.Native, new Rattempt()));
             ctx.PutNow("try", new Rtoken(Rtype.Native, new Rtry()));

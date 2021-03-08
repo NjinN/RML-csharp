@@ -473,6 +473,75 @@ namespace RML.Lang {
 
 
 
+        public bool Eq(Rtoken tk) {
+            if(tp.Equals(Rtype.Int) && tk.tp.Equals(Rtype.Float)) {
+                return (decimal)GetInt() == tk.GetFloat();
+            }else if(tp.Equals(Rtype.Float) && tk.tp.Equals(Rtype.Int)) {
+                return GetFloat() == (decimal)tk.GetInt();
+            }
+
+            if (!tk.tp.Equals(tp)) {
+                return false;
+            }
+
+            switch (tp) {
+                case Rtype.None:
+                    return true;
+                case Rtype.Err:
+                    return GetStr().Equals(tk.GetStr());
+                case Rtype.Datatype:
+                    return GetRtype().Equals(tk.GetRtype());
+                case Rtype.Bool:
+                    return GetBool().Equals(tk.GetBool());
+                case Rtype.Char:
+                    return GetChar().Equals(tk.GetChar());
+                case Rtype.Int:
+                    return GetInt().Equals(tk.GetInt());
+                case Rtype.Float:
+                    return GetFloat().Equals(tk.GetFloat());
+                case Rtype.Str:
+                case Rtype.File:
+                case Rtype.Prop:
+                case Rtype.GetWord:
+                case Rtype.SetWord:
+                    return GetStr().Equals(tk.GetStr());
+                case Rtype.Block:
+                case Rtype.Paren:
+                case Rtype.Path:
+                case Rtype.SetPath:
+                    if(GetList().Count != tk.GetList().Count) {
+                        return false;
+                    }
+                    int i = 0;
+                    while(i < GetList().Count) {
+                        if (!GetList()[i].Eq(tk.GetList()[i])) {
+                            return false;
+                        }
+                        i++;
+                    }
+                    return true;
+                case Rtype.CallProc:
+                    return GetCallProc().Equals(tk.GetCallProc());
+                case Rtype.SetProc:
+                    return GetSetProc().Equals(tk.GetSetProc());
+                case Rtype.Proc:
+                    return GetProc().Equals(tk.GetProc());
+                case Rtype.Func:
+                    return GetFunc().Equals(tk.GetFunc());
+                case Rtype.Native:
+                case Rtype.Op:
+                    return GetNative().Equals(tk.GetNative());
+                    
+
+                default:
+                    return false;
+            }
+
+        }
+
+
+
+
     }
 
 

@@ -12,7 +12,8 @@ namespace RML.NativeLib {
         }
 
         public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
-
+            return new Rtoken(Rtype.Bool, args[0].Eq(args[1]));
+            /*
             return (args[0].tp, args[1].tp) switch {
                 (Rtype.Int, Rtype.Int) => EqIntInt(args),
                 (Rtype.Int, Rtype.Float) => EqIntFloat(args),
@@ -22,6 +23,7 @@ namespace RML.NativeLib {
                 (Rtype.Bool, Rtype.Bool) => new Rtoken(Rtype.Bool, args[0].GetBool() == args[1].GetBool()),
                 (_, _) => EqAnyAny(args)
             };
+            */
 
         }
 
@@ -50,11 +52,7 @@ namespace RML.NativeLib {
         }
 
         public Rtoken EqAnyAny(List<Rtoken> args) {
-            if (args[0].tp.Equals(args[1].tp)) {
-                return new Rtoken(Rtype.Bool, args[0].val.Equals(args[1].val));
-            } else {
-                return new Rtoken(Rtype.Bool, false);
-            }
+            return new Rtoken(Rtype.Bool, args[0].Eq(args[1]));
         }
     }
 

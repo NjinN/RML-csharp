@@ -54,8 +54,42 @@ insert: func [s t /at at /only] [
     _insert copy/deep s t at only
 ]
 
-
+at*: func [s idx] [
+    _at s idx
+]
         
+at: func [s idx] [
+    _at copy/deep s idx
+]
+
+index: func [s t /at at /last] [
+    if at = none [at: 1]
+    _index s t at last
+]
+
+find*: func [s t /at at /last] [
+    if at = none [at: 1]
+    _find s t at last
+]
+
+find: func [s t /at at /last] [
+    if at = none [at: 1]
+    _find copy/deep s t at last
+]
+
+replace*: func [s t n /at at /times times /last /all /only] [
+    if at = none [at: 1]
+    if times = none [times: 1]
+    if all [times: 99999999]
+    _replace s t n at last times only
+]
+
+replace: func [s t n /at at /times times /last /all /only] [
+    if at = none [at: 1]
+    if times = none [times: 1]
+    if all [times: 99999999]
+    _replace copy/deep s t n at last times only
+]
 
 
 

@@ -49,6 +49,10 @@ namespace RML.Lang {
             return (string)val;
         }
 
+        public byte[] GetBin() {
+            return (byte[])val;
+        }
+
         public List<Rtoken> GetList() {
             return (List<Rtoken>)val;
         }
@@ -111,6 +115,8 @@ namespace RML.Lang {
                     return GetFloat().ToString();
                 case Rtype.Str:
                     return '"' + GetStr() + '"';
+                case Rtype.Bin:
+                    return "#{" + HexCommon.byteToHexStr(GetBin()) + "}";
                 case Rtype.File:
                     return '%' + GetStr();
                 case Rtype.Block: { }

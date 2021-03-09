@@ -14,6 +14,7 @@ namespace RML.Lang {
         Int,
         Float,
         Str,
+        Bin,
         File,
         Block,
         Paren,

@@ -33,6 +33,9 @@ namespace RML.NativeLib {
                     (Rtype.Float, Rtype.Int) => new Rtoken(Rtype.Float, (decimal)args[1].GetInt()),
                     (Rtype.Float, _) => new Rtoken(Rtype.Float, (decimal)args[1].val),
                     (Rtype.Str, _) => new Rtoken(Rtype.Str, args[1].OutputStr()),
+                    (Rtype.Bin, Rtype.Int) => new Rtoken(Rtype.Bin, LangUtil.ReverseArr(BitConverter.GetBytes(args[1].GetInt()))),
+                    (Rtype.Bin, Rtype.Float) => new Rtoken(Rtype.Bin, LangUtil.ReverseArr(BitConverter.GetBytes(Decimal.ToDouble(args[1].GetFloat())))),
+                    (Rtype.Bin, Rtype.Str) => new Rtoken(Rtype.Bin, System.Text.Encoding.Default.GetBytes(args[1].GetStr())),
                     (Rtype.File, _) => new Rtoken(Rtype.File, args[1].OutputStr()),
                     (Rtype.Block, Rtype.Paren) => new Rtoken(Rtype.Block, LangUtil.DeepCopyList(args[1].GetList())),
                     (Rtype.Block, Rtype.Path) => new Rtoken(Rtype.Block, LangUtil.DeepCopyList(args[1].GetList())),
@@ -46,7 +49,7 @@ namespace RML.NativeLib {
                     (Rtype.SetWord, _) => new Rtoken(Rtype.SetWord, args[1].OutputStr()),
                     (Rtype.Path, Rtype.SetPath) => new Rtoken(Rtype.Path, LangUtil.DeepCopyList(args[1].GetList())),
                     (Rtype.SetPath, Rtype.Path) => new Rtoken(Rtype.SetPath, LangUtil.DeepCopyList(args[1].GetList())),
-
+               
 
                     (_, _) => ErrorInfo(args)
                 };

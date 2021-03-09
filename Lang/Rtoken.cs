@@ -49,8 +49,8 @@ namespace RML.Lang {
             return (string)val;
         }
 
-        public byte[] GetBin() {
-            return (byte[])val;
+        public List<byte> GetBin() {
+            return (List<byte>)val;
         }
 
         public List<Rtoken> GetList() {
@@ -90,6 +90,17 @@ namespace RML.Lang {
             return (RcallProc)val;
         }
 
+        public string GetFilePath() {
+            string path = GetStr();
+            if (path.StartsWith('/')) {
+                path = path.TrimStart('/');
+            } else {
+                path = System.IO.Directory.GetCurrentDirectory() + "/" + path;
+            }
+
+            return path;
+        }
+
 
 
         public string ToStr() {
@@ -116,7 +127,7 @@ namespace RML.Lang {
                 case Rtype.Str:
                     return '"' + GetStr() + '"';
                 case Rtype.Bin:
-                    return "#{" + HexCommon.byteToHexStr(GetBin()) + "}";
+                    return "#{" + HexCommon.byteToHexStr(GetBin().ToArray()) + "}";
                 case Rtype.File:
                     return '%' + GetStr();
                 case Rtype.Block: { }

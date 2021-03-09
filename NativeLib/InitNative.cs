@@ -68,6 +68,18 @@ namespace RML.NativeLib {
             ctx.PutNow("attempt", new Rtoken(Rtype.Native, new Rattempt()));
             ctx.PutNow("try", new Rtoken(Rtype.Native, new Rtry()));
 
+            ctx.PutNow("exists", new Rtoken(Rtype.Native, new Rexists()));
+            ctx.PutNow("_read", new Rtoken(Rtype.Native, new Rread()));
+            ctx.PutNow("_write", new Rtoken(Rtype.Native, new Rwrite()));
+            ctx.PutNow("frename", new Rtoken(Rtype.Native, new Rfrename()));
+            ctx.PutNow("fmove", new Rtoken(Rtype.Native, new Rfmove()));
+            ctx.PutNow("_fcopy", new Rtoken(Rtype.Native, new Rfcopy()));
+            ctx.PutNow("fdelete", new Rtoken(Rtype.Native, new Rfdelete()));
+            ctx.PutNow("fcwd", new Rtoken(Rtype.Native, new Rfcwd()));
+            ctx.PutNow("fcd", new Rtoken(Rtype.Native, new Rfcd()));
+            ctx.PutNow("fdir", new Rtoken(Rtype.Native, new Rfdir()));
+            ctx.PutNow("_fls", new Rtoken(Rtype.Native, new Rfls()));
+
         }
 
 

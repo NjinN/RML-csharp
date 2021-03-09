@@ -91,9 +91,25 @@ replace: func [s t n /at at /times times /last /all /only] [
     _replace copy/deep s t n at last times only
 ]
 
+read: func [t /str /local tp] [
+    tp: bin!
+    if str [tp: str!]
+    _read t tp
+]
 
+write: func [t d /append] [
+    _write t d append
+]
 
+fcopy: func [f1 f2 /rewrite] [
+    if rewrite = none [rewrite: false]
+    _fcopy f1 f2 rewrite
+]
 
+fls: func [/dir dir] [
+    if dir = none [dir: fcwd]
+    _fls dir
+]
 
 
 

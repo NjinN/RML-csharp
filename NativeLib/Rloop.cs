@@ -338,4 +338,112 @@ namespace RML.NativeLib {
 
 
 
+    [Serializable]
+    class Rforeach : Rnative {
+        public Rforeach() {
+            name = "foreach";
+            argsLen = 3;
+            quoteList = new List<bool>() { true, false, false };
+        }
+
+        public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
+            return (args[0].tp, args[1].tp, args[2].tp) switch {
+                (Rtype.Word, Rtype.Str, Rtype.Block) => ForeachStr(args, ctx),
+                (Rtype.Word, Rtype.Block, Rtype.Block) => ForeachWordBlk(args, ctx),
+                (Rtype.Block, Rtype.Block, Rtype.Block) => ForeachBlkBlk(args, ctx),
+
+                _ => ErrorInfo(args)
+            };
+            
+        }
+
+
+        public Rtoken ForeachStr(List<Rtoken> args, Rtable ctx) {
+            Rtable lctx = new Rtable(Rtable.Type.TMP, ctx);
+            Rsolver solver = new Rsolver();
+            RtokenKit.ClearCtxForWordByWords(new List<Rtoken>() { args[0] }, args[2].GetList());
+            foreach(var item in args[1].GetStr()) {
+                lctx.PutNow(args[0].GetWord().key, new Rtoken(Rtype.Char, item));
+                Rtoken ans = solver.InputBlk(args[2].GetList()).Eval(lctx);
+                if (ans.tp.Equals(Rtype.Err)) {
+                    return ans;
+                } else if (ans.tp.Equals(Rtype.Flow)) {
+                    if (ans.GetFlow().name.Equals("return")) {
+                        return ans;
+                    } else if (ans.GetFlow().name.Equals("break")) {
+                        break;
+                    }
+                }
+            }
+
+            return new Rtoken();
+        }
+
+        public Rtoken ForeachWordBlk(List<Rtoken> args, Rtable ctx) {
+            Rtable lctx = new Rtable(Rtable.Type.TMP, ctx);
+            Rsolver solver = new Rsolver();
+            RtokenKit.ClearCtxForWordByWords(new List<Rtoken>() { args[0] }, args[2].GetList());
+            foreach (var item in args[1].GetList()) {
+                lctx.PutNow(args[0].GetWord().key, item);
+                Rtoken ans = solver.InputBlk(args[2].GetList()).Eval(lctx);
+                if (ans.tp.Equals(Rtype.Err)) {
+                    return ans;
+                } else if (ans.tp.Equals(Rtype.Flow)) {
+                    if (ans.GetFlow().name.Equals("return")) {
+                        return ans;
+                    } else if (ans.GetFlow().name.Equals("break")) {
+                        break;
+                    }
+                }
+            }
+
+            return new Rtoken();
+        }
+
+        public Rtoken ForeachBlkBlk(List<Rtoken> args, Rtable ctx) {
+            foreach(var item in args[0].GetList()){
+                if (!item.tp.Equals(Rtype.Word)) {
+                    return new Rtoken(Rtype.Err, "Error: iter must be word! for native::foreach");
+                }
+            }
+
+            Rtable lctx = new Rtable(Rtable.Type.TMP, ctx);
+            Rsolver solver = new Rsolver();
+            RtokenKit.ClearCtxForWordByWords(args[0].GetList(), args[2].GetList());
+
+            List<Rtoken> iters = args[0].GetList();
+            List<Rtoken> list = args[1].GetList();
+            int i = 0;
+            while(i < list.Count) {
+                int j = 0;
+                while(j < iters.Count) {
+                    if((i + j) < list.Count) {
+                        lctx.PutNow(iters[j].GetWord().key, list[i + j]);
+                    } else {
+                        lctx.PutNow(iters[j].GetWord().key, new Rtoken(Rtype.None, 0));
+                    }
+                    j++;
+                }
+
+                Rtoken ans = solver.InputBlk(args[2].GetList()).Eval(lctx);
+                if (ans.tp.Equals(Rtype.Err)) {
+                    return ans;
+                } else if (ans.tp.Equals(Rtype.Flow)) {
+                    if (ans.GetFlow().name.Equals("return")) {
+                        return ans;
+                    } else if (ans.GetFlow().name.Equals("break")) {
+                        break;
+                    }
+                }
+
+                i += iters.Count;
+            }
+
+            return new Rtoken();
+        }
+
+    }
+
+
+
 }

@@ -15,6 +15,10 @@ quit: func [/code code] [
 
 q: :quit
 
+print: func [t /inline] [
+    _print t inline
+]
+
 copy: func [source /deep] [
     _copy source deep
 ]

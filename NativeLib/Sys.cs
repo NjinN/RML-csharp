@@ -23,12 +23,21 @@ namespace RML.NativeLib {
     [Serializable]
     class Rprint : Rnative {
         public Rprint() {
-            name = "print";
-            argsLen = 1;
+            name = "_print";
+            argsLen = 2;
         }
 
         public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
-            args[0].Echo();
+            if (args[1].ToBool()) {
+                if (args[0].tp.Equals(Rtype.Str)) {
+                    Console.Write(args[0].OutputStr());
+                } else {
+                    Console.Write(args[0].ToStr());
+                }
+            }else {
+                args[0].Echo();
+            }
+            
             return new Rtoken();
         }
     }

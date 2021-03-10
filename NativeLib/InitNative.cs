@@ -14,7 +14,7 @@ namespace RML.NativeLib {
 
 
             ctx.PutNow("_quit", new Rtoken(Rtype.Native, new Rquit()));
-            ctx.PutNow("print", new Rtoken(Rtype.Native, new Rprint()));
+            ctx.PutNow("_print", new Rtoken(Rtype.Native, new Rprint()));
             ctx.PutNow("clear", new Rtoken(Rtype.Native, new Rclear()));
             ctx.PutNow("cost", new Rtoken(Rtype.Native, new Cost()));
 
@@ -49,6 +49,7 @@ namespace RML.NativeLib {
             ctx.PutNow("for", new Rtoken(Rtype.Native, new Rfor()));
             ctx.PutNow("while", new Rtoken(Rtype.Native, new Rwhile()));
             ctx.PutNow("until", new Rtoken(Rtype.Native, new Runtil()));
+            ctx.PutNow("foreach", new Rtoken(Rtype.Native, new Rforeach()));
 
             ctx.PutNow("fork", new Rtoken(Rtype.Native, new Rfork()));
             ctx.PutNow("_spawn", new Rtoken(Rtype.Native, new Rspawn()));

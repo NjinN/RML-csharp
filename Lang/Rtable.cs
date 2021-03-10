@@ -59,8 +59,8 @@ namespace RML.Lang {
             return table.GetValueOrDefault(k, new Rtoken());
         }
 
-        public void RemoveNow(string k) {
-            table.Remove(k);
+        public bool RemoveNow(string k) {
+            return table.Remove(k);
         }
 
         public void Put(string k, Rtoken v) {
@@ -84,14 +84,14 @@ namespace RML.Lang {
         }
 
 
-        public void Remove(string k) {
+        public bool Remove(string k) {
             Rtable tb = this;
 
             while (!tb.table.ContainsKey(k) && null != tb.father) {
                 tb = tb.father;
             }
 
-            tb.RemoveNow(k);
+            return tb.RemoveNow(k);
         }
 
         public Rtable CopyDeep() {

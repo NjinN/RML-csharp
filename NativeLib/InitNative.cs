@@ -6,15 +6,19 @@ using RML.Lang;
 namespace RML.NativeLib {
     class InitNative {
         public static void Init(Rtable ctx) {
-            ctx.PutNow("do", new Rtoken(Rtype.Native, new Rdo()));
+            ctx.PutNow("_do", new Rtoken(Rtype.Native, new Rdo()));
             ctx.PutNow("reduce", new Rtoken(Rtype.Native, new Rreduce()));
             ctx.PutNow("compose", new Rtoken(Rtype.Native, new Rcompose()));
             ctx.PutNow("type?", new Rtoken(Rtype.Native, new RtypeOf()));
             ctx.PutNow("_copy", new Rtoken(Rtype.Native, new Rcopy()));
+            ctx.PutNow("_collect", new Rtoken(Rtype.Native, new Rcollect()));
 
 
             ctx.PutNow("_quit", new Rtoken(Rtype.Native, new Rquit()));
             ctx.PutNow("_print", new Rtoken(Rtype.Native, new Rprint()));
+            ctx.PutNow("_ask", new Rtoken(Rtype.Native, new Rask()));
+            ctx.PutNow("unset", new Rtoken(Rtype.Native, new Runset()));
+            ctx.PutNow("gc", new Rtoken(Rtype.Native, new Rgc()));
             ctx.PutNow("clear", new Rtoken(Rtype.Native, new Rclear()));
             ctx.PutNow("cost", new Rtoken(Rtype.Native, new Cost()));
 
@@ -80,6 +84,7 @@ namespace RML.NativeLib {
             ctx.PutNow("fcd", new Rtoken(Rtype.Native, new Rfcd()));
             ctx.PutNow("fdir", new Rtoken(Rtype.Native, new Rfdir()));
             ctx.PutNow("_fls", new Rtoken(Rtype.Native, new Rfls()));
+            ctx.PutNow("fabs", new Rtoken(Rtype.Native, new Rfabs()));
 
         }
 

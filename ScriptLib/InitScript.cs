@@ -19,8 +19,20 @@ print: func [t /inline] [
     _print t inline
 ]
 
+ask: func [msg /hide] [
+    _ask msg hide
+]
+
+do: func [blk /with with] [
+    _do blk with
+]
+
 copy: func [source /deep] [
     _copy source deep
+]
+
+collect: func [blk /with with] [
+    _collect blk with
 ]
 
 spawn: func [blk /wait /timeout timeout] [

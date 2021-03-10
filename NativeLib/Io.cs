@@ -415,4 +415,23 @@ namespace RML.NativeLib {
 
     }
 
+
+    [Serializable]
+    class Rfabs : Rnative {
+        public Rfabs() {
+            name = "fabs";
+            argsLen = 1;
+        }
+
+        public override Rtoken Run(List<Rtoken> args, Rtable ctx) {
+            if (args[0].tp.Equals(Rtype.File)) {
+                return new Rtoken(Rtype.Str, args[0].GetFilePath());
+            }
+
+            return ErrorInfo(args);
+
+        }
+
+    }
+
 }

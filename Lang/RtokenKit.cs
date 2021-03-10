@@ -312,6 +312,20 @@ namespace RML.Lang {
             }
         }
 
+        public static void ClearCtxForWords(List<Rtoken> blk) {
+            foreach (Rtoken itor in blk) {
+                if (itor.tp.Equals(Rtype.Word)) {
+                    itor.GetWord().ctx = null;
+                } else if (itor.tp.Equals(Rtype.Block) || itor.tp.Equals(Rtype.Paren)) {
+                    ClearCtxForWords(itor.GetList());
+                } else if (itor.tp.Equals(Rtype.CallProc)) {
+                    ClearCtxForWords(itor.GetCallProc().args);
+                } else if (itor.tp.Equals(Rtype.SetProc)) {
+                    ClearCtxForWords(itor.GetSetProc().args);
+                }
+            }    
+        }
+
 
         public static List<Rtoken> CopyList(List<Rtoken> source) {
             List<Rtoken> result = new List<Rtoken>();

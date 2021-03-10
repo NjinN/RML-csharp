@@ -86,6 +86,8 @@ namespace RML.NativeLib {
             ctx.PutNow("_fls", new Rtoken(Rtype.Native, new Rfls()));
             ctx.PutNow("fabs", new Rtoken(Rtype.Native, new Rfabs()));
 
+
+            ctx.PutNow("parse", new Rtoken(Rtype.Native, new Rparse()));
         }
 
 

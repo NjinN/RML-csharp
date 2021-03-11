@@ -427,12 +427,12 @@ namespace RML.NativeLib {
                         } else {
                             rule.maxTimes = tempTk.GetInt();
                         }
-                    } else if (nowRule.tp.Equals(Rtype.Str)) {
+                    } else if (tempTk.tp.Equals(Rtype.Str)) {
                         rule.ruleStr = tempTk.GetStr();
                         rule.CompleteRuleRange();
                         blkIdx++;
                         return;
-                    } else if (nowRule.tp.Equals(Rtype.Block)) {
+                    } else if (tempTk.tp.Equals(Rtype.Block)) {
                         rule.ruleBlk = tempTk;
                         rule.CompleteRuleRange();
                         blkIdx++;
